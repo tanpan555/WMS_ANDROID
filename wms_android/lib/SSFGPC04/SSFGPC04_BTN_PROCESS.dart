@@ -1140,6 +1140,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       {'group_code': 'ทั้งหมด', 'group_name': ''},
       ...dataLovStartGroup, // เพิ่มข้อมูลเดิมทั้งหมด
     ];
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -1158,11 +1159,18 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
             Navigator.of(context).pop();
             setState(() {
               returnStartGroup = '${item['group_code'] ?? ''}';
-              displayStartGroup = '${item['group_code'] ?? ''}' == 'ทั้งหมด'
+              displayStartGroup = returnStartGroup == 'ทั้งหมด'
                   ? null
                   : '${item['group_code'] ?? ''}';
               startGroupController.text = displayStartGroup ?? 'ทั้งหมด';
-              if (returnStartGroup != 'ทั้งหมด') {
+
+              // Additional logic when "ทั้งหมด" is selected
+              if (returnStartGroup == 'ทั้งหมด') {
+                // If "ทั้งหมด" is selected, set null for API call
+                displayStartGroup = null;
+                returnStartGroup = '';
+              } else {
+                // Logic for when a specific group is selected
                 if (returnEndGroup.isNotEmpty &&
                     returnEndGroup != '' &&
                     returnStartGroup != '') {
@@ -1187,61 +1195,59 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                     endGroupController.text = displayStartGroup.toString();
                   } else {
                     displayEndGroup = endGroup;
-                    // endGroup = displayStartGroup;
                     returnEndGroup = returnStartGroup;
                     endGroupController.text = endGroup.toString();
                   }
                 }
-                selectLovEndGroup();
-                // displayEndGroup = null;
-                // returnEndGroup = '';
-                // endGroupController.text = '';
-                searchEndGroupController.clear;
-                selectLovStartCategory();
-                displayStartCategory = null;
-                returnStartCategory = '';
-                startCategoryController.text = '';
-                searchStartCatController.clear;
-                selectLovEndCategory();
-                displayEndCategory = null;
-                returnEndCategory = '';
-                endCategoryController.text = '';
-                searchEndCatController.clear;
-                selectLovStartSubCategory();
-                displayStartSubCategory = null;
-                returnStartSubCategory = '';
-                startSubCategoryController.text = '';
-                searchStartSubCatController.clear;
-                selectLovEndSubCategory();
-                displayEndSubCategory = null;
-                returnEndSubCategory = '';
-                endSubCategoryController.text = '';
-                searchEndSubCatController.clear;
-                selectLovStartBrand();
-                displayStartBrand = null;
-                returnStartBrand = '';
-                startBrandController.text = '';
-                searchStartBrandController.clear;
-                selectLovEndBrand();
-                displayEndBrand = null;
-                returnEndBrand = '';
-                endBrandController.text = '';
-                searchEndBrandController.clear;
-                selectLovStartItem();
-                displayStartItem = null;
-                returnStartItem = '';
-                startItemController.text = '';
-                searchStartItemController.clear;
-                selectLovEndItem();
-                displayEndItem = null;
-                returnEndItem = '';
-                endItemController.text = '';
-                searchEndItemController.clear;
-                isLoading = false;
               }
-              searchStartGroupController.clear();
+
+              // Reset other fields when group is selected
+              selectLovEndGroup();
+              searchEndGroupController.clear();
+              selectLovStartCategory();
+              displayStartCategory = null;
+              returnStartCategory = '';
+              startCategoryController.text = '';
+              searchStartCatController.clear();
+              selectLovEndCategory();
+              displayEndCategory = null;
+              returnEndCategory = '';
+              endCategoryController.text = '';
+              searchEndCatController.clear();
+              selectLovStartSubCategory();
+              displayStartSubCategory = null;
+              returnStartSubCategory = '';
+              startSubCategoryController.text = '';
+              searchStartSubCatController.clear();
+              selectLovEndSubCategory();
+              displayEndSubCategory = null;
+              returnEndSubCategory = '';
+              endSubCategoryController.text = '';
+              searchEndSubCatController.clear();
+              selectLovStartBrand();
+              displayStartBrand = null;
+              returnStartBrand = '';
+              startBrandController.text = '';
+              searchStartBrandController.clear();
+              selectLovEndBrand();
+              displayEndBrand = null;
+              returnEndBrand = '';
+              endBrandController.text = '';
+              searchEndBrandController.clear();
+              selectLovStartItem();
+              displayStartItem = null;
+              returnStartItem = '';
+              startItemController.text = '';
+              searchStartItemController.clear();
+              selectLovEndItem();
+              displayEndItem = null;
+              returnEndItem = '';
+              endItemController.text = '';
+              searchEndItemController.clear();
+
               isLoading = false;
             });
+
             if (returnStartGroup != 'ทั้งหมด') {
               checkUpdateDataALL(true);
             }
@@ -1266,6 +1272,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       {'group_code': 'ทั้งหมด', 'group_name': ''},
       ...dataLovEndGroup, // เพิ่มข้อมูลเดิมทั้งหมด
     ];
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -1276,7 +1283,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           searchController: searchEndGroupController,
           data: dataEndGroup,
           docString: (item) =>
-              '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}', // ฟังก์ชันสำหรับสร้างข้อความที่ใช้กรอง
+              '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}',
           titleText: (item) => '${item['group_code'] ?? ''}',
           subtitleText: (item) => '${item['group_name'] ?? ''}',
           onTap: (item) {
@@ -1284,19 +1291,18 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
             Navigator.of(context).pop();
             setState(() {
               returnEndGroup = '${item['group_code'] ?? ''}';
-              displayEndGroup = '${item['group_code'] ?? ''}' == 'ทั้งหมด'
+              displayEndGroup = returnEndGroup == 'ทั้งหมด'
                   ? null
                   : '${item['group_code'] ?? ''}';
-              if (displayEndGroup.toString().isNotEmpty &&
-                  displayEndGroup != 'ทั้งหมด' &&
-                  returnEndGroup != '') {
-                endGroup = '${item['group_code']}';
-              } else {
-                endGroup = '';
-              }
+              endGroup = displayEndGroup.toString().isNotEmpty &&
+                      returnEndGroup != 'ทั้งหมด'
+                  ? '${item['group_code']}'
+                  : '';
+
               endGroupController.text = displayEndGroup ?? 'ทั้งหมด';
-              // รีเซ็ตค่าอื่น ๆ ที่เกี่ยวข้อง
-              if (returnEndGroup != 'ทั้งหมด') {
+
+              // Reset related values when "ทั้งหมด" is selected
+              if (returnEndGroup == 'ทั้งหมด') {
                 selectLovStartCategory();
                 displayStartCategory = null;
                 returnStartCategory = '';
@@ -1306,40 +1312,43 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                 displayEndCategory = null;
                 returnEndCategory = '';
                 endCategoryController.text = '';
-                searchEndCatController.clear;
+                searchEndCatController.clear();
                 selectLovStartSubCategory();
                 displayStartSubCategory = null;
                 returnStartSubCategory = '';
                 startSubCategoryController.text = '';
-                searchStartSubCatController.clear;
+                searchStartSubCatController.clear();
                 selectLovEndSubCategory();
                 displayEndSubCategory = null;
                 returnEndSubCategory = '';
                 endSubCategoryController.text = '';
-                searchEndSubCatController.clear;
+                searchEndSubCatController.clear();
                 selectLovStartBrand();
                 displayStartBrand = null;
                 returnStartBrand = '';
                 startBrandController.text = '';
-                searchStartBrandController.clear;
+                searchStartBrandController.clear();
                 selectLovEndBrand();
                 displayEndBrand = null;
                 returnEndBrand = '';
                 endBrandController.text = '';
-                searchEndBrandController.clear;
+                searchEndBrandController.clear();
                 selectLovStartItem();
                 displayStartItem = null;
                 returnStartItem = '';
                 startItemController.text = '';
-                searchStartItemController.clear;
+                searchStartItemController.clear();
                 selectLovEndItem();
                 displayEndItem = null;
                 returnEndItem = '';
                 endItemController.text = '';
-                searchEndItemController.clear;
+                searchEndItemController.clear();
                 isLoading = false;
               }
+
               isLoading = false;
+
+              // Debug log
               print(
                   'endGroupController New: $endGroupController Type : ${endGroupController.runtimeType}');
               print(
@@ -1347,6 +1356,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
               print(
                   'returnEndGroup New: $returnEndGroup Type : ${returnEndGroup.runtimeType}');
             });
+
             if (returnStartGroup != 'ทั้งหมด') {
               checkUpdateDataALL(true);
             }
@@ -1356,6 +1366,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     );
   }
 
+
 //----------------------------------------------------------------------------//
 // จาก Category
   void showDialogDropdownSearchStartCategory() {
@@ -1363,6 +1374,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       {'category_code': 'ทั้งหมด', 'category_desc': ''},
       ...dataLovStartCategory, // เพิ่มข้อมูลเดิมทั้งหมด
     ];
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -1377,19 +1389,21 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           titleText: (item) => '${item['category_code'] ?? ''}',
           subtitleText: (item) => '${item['category_desc'] ?? ''}',
           onTap: (item) {
-            // final returnCode = '${item['category_code'] ?? ''}';
-            // final doc = '${item['category_code'] ?? ''}';
-
             isLoading = true;
             Navigator.of(context).pop();
             setState(() {
               returnStartCategory = '${item['category_code'] ?? ''}';
-              displayStartCategory =
-                  '${item['category_code'] ?? ''}' == 'ทั้งหมด'
-                      ? null
-                      : '${item['category_code'] ?? ''}';
+              // If "ทั้งหมด" is selected, set the values to null for API usage
+              displayStartCategory = returnStartCategory == 'ทั้งหมด'
+                  ? null
+                  : '${item['category_code'] ?? ''}';
               startCategoryController.text = displayStartCategory ?? 'ทั้งหมด';
-              if (returnStartCategory != 'ทั้งหมด') {
+
+              // Reset other related fields if "ทั้งหมด" is selected
+              if (returnStartCategory == 'ทั้งหมด') {
+                displayStartCategory = null;
+                returnStartCategory = '';
+              } else {
                 if (returnEndCategory.isNotEmpty &&
                     returnEndCategory != '' &&
                     returnStartCategory != '') {
@@ -1416,51 +1430,48 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                         displayStartCategory.toString();
                   } else {
                     displayEndCategory = endCategory;
-                    // displayEndCategoryBackup = displayStartCategory;
                     returnEndCategory = returnStartCategory;
                     endCategoryController.text = endCategory.toString();
                   }
                 }
-                selectLovEndCategory();
-                // displayEndCategory = null;
-                // returnEndCategory = '';
-                // endCategoryController.text = '';
-                searchEndCatController.clear;
-                selectLovStartSubCategory();
-                displayStartSubCategory = null;
-                returnStartSubCategory = '';
-                startSubCategoryController.text = '';
-                searchStartSubCatController.clear;
-                selectLovEndSubCategory();
-                displayEndSubCategory = null;
-                returnEndSubCategory = '';
-                endSubCategoryController.text = '';
-                searchEndSubCatController.clear;
-                selectLovStartBrand();
-                displayStartBrand = null;
-                returnStartBrand = '';
-                startBrandController.text = '';
-                searchStartBrandController.clear;
-                selectLovEndBrand();
-                displayEndBrand = null;
-                returnEndBrand = '';
-                endBrandController.text = '';
-                searchEndBrandController.clear;
-                selectLovStartItem();
-                displayStartItem = null;
-                returnStartItem = '';
-                startItemController.text = '';
-                searchStartItemController.clear;
-                selectLovEndItem();
-                displayEndItem = null;
-                returnEndItem = '';
-                endItemController.text = '';
-                searchEndItemController.clear;
-                isLoading = false;
               }
+              // Reset other dependent fields
+              selectLovEndCategory();
+              searchEndCatController.clear();
+              selectLovStartSubCategory();
+              displayStartSubCategory = null;
+              returnStartSubCategory = '';
+              startSubCategoryController.text = '';
+              searchStartSubCatController.clear();
+              selectLovEndSubCategory();
+              displayEndSubCategory = null;
+              returnEndSubCategory = '';
+              endSubCategoryController.text = '';
+              searchEndSubCatController.clear();
+              selectLovStartBrand();
+              displayStartBrand = null;
+              returnStartBrand = '';
+              startBrandController.text = '';
+              searchStartBrandController.clear();
+              selectLovEndBrand();
+              displayEndBrand = null;
+              returnEndBrand = '';
+              endBrandController.text = '';
+              searchEndBrandController.clear();
+              selectLovStartItem();
+              displayStartItem = null;
+              returnStartItem = '';
+              startItemController.text = '';
+              searchStartItemController.clear();
+              selectLovEndItem();
+              displayEndItem = null;
+              returnEndItem = '';
+              endItemController.text = '';
+              searchEndItemController.clear();
               isLoading = false;
             });
             searchStartCatController.clear();
+
             if (returnStartCategory != 'ทั้งหมด') {
               checkUpdateDataALL(true);
             }
@@ -1469,7 +1480,6 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       },
     );
   }
-
 //----------------------------------------------------------------------------//
 // ถึง Category
   void showDialogDropdownSearchEndCategory() {
@@ -1477,6 +1487,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       {'category_code': 'ทั้งหมด', 'category_desc': ''},
       ...dataLovEndCategory,
     ];
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -1495,52 +1506,60 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
             Navigator.of(context).pop();
             setState(() {
               returnEndCategory = '${item['category_code'] ?? ''}';
-              displayEndCategory = '${item['category_code'] ?? ''}' == 'ทั้งหมด'
-                  ? null
-                  : '${item['category_code'] ?? ''}';
-              if (displayEndCategory.toString().isNotEmpty &&
-                  displayEndCategory != 'ทั้งหมด' &&
-                  returnEndCategory != '') {
-                endCategory = '${item['category_code']}';
+
+              // If "ทั้งหมด" is selected, set values to null for API usage
+              if (returnEndCategory == 'ทั้งหมด') {
+                displayEndCategory = null;
+                returnEndCategory = '';
               } else {
-                endCategory = '';
+                displayEndCategory = '${item['category_code'] ?? ''}';
               }
+
               endCategoryController.text = displayEndCategory ?? 'ทั้งหมด';
-              if (returnEndCategory != 'ทั้งหมด') {
-                selectLovStartSubCategory();
-                displayStartSubCategory = null;
-                returnStartSubCategory = '';
-                startSubCategoryController.text = '';
-                searchStartSubCatController.clear;
-                selectLovEndSubCategory();
-                displayEndSubCategory = null;
-                returnEndSubCategory = '';
-                endSubCategoryController.text = '';
-                searchEndSubCatController.clear;
-                selectLovStartBrand();
-                displayStartBrand = null;
-                returnStartBrand = '';
-                startBrandController.text = '';
-                searchStartBrandController.clear;
-                selectLovEndBrand();
-                displayEndBrand = null;
-                returnEndBrand = '';
-                endBrandController.text = '';
-                searchEndBrandController.clear;
-                selectLovStartItem();
-                displayStartItem = null;
-                returnStartItem = '';
-                startItemController.text = '';
-                searchStartItemController.clear;
-                selectLovEndItem();
-                displayEndItem = null;
-                returnEndItem = '';
-                endItemController.text = '';
-                searchEndItemController.clear;
-                isLoading = false;
+
+              // Reset related fields when "ทั้งหมด" is selected
+              if (returnEndCategory == 'ทั้งหมด') {
+                endCategory = '';
+                endCategoryController.text = '';
+              } else {
+                endCategory = displayEndCategory ?? '';
               }
+
+              // Reset dependent fields
+              selectLovStartSubCategory();
+              displayStartSubCategory = null;
+              returnStartSubCategory = '';
+              startSubCategoryController.text = '';
+              searchStartSubCatController.clear();
+              selectLovEndSubCategory();
+              displayEndSubCategory = null;
+              returnEndSubCategory = '';
+              endSubCategoryController.text = '';
+              searchEndSubCatController.clear();
+              selectLovStartBrand();
+              displayStartBrand = null;
+              returnStartBrand = '';
+              startBrandController.text = '';
+              searchStartBrandController.clear();
+              selectLovEndBrand();
+              displayEndBrand = null;
+              returnEndBrand = '';
+              endBrandController.text = '';
+              searchEndBrandController.clear();
+              selectLovStartItem();
+              displayStartItem = null;
+              returnStartItem = '';
+              startItemController.text = '';
+              searchStartItemController.clear();
+              selectLovEndItem();
+              displayEndItem = null;
+              returnEndItem = '';
+              endItemController.text = '';
+              searchEndItemController.clear();
+
               isLoading = false;
             });
+
             searchEndCatController.clear();
             if (returnEndCategory != 'ทั้งหมด') {
               checkUpdateDataALL(true);
@@ -1550,6 +1569,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       },
     );
   }
+
 
 //----------------------------------------------------------------------------//
 // จาก Sub Category
@@ -1576,13 +1596,17 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
             Navigator.of(context).pop();
             setState(() {
               returnStartSubCategory = '${item['sub_cat_code'] ?? ''}';
-              displayStartSubCategory =
-                  '${item['sub_cat_code'] ?? ''}' == 'ทั้งหมด'
-                      ? null
-                      : '${item['sub_cat_code'] ?? ''}';
-              startSubCategoryController.text =
-                  displayStartSubCategory ?? 'ทั้งหมด';
-              if (returnStartSubCategory != 'ทั้งหมด') {
+              // If "ทั้งหมด" is selected, set the values to null for API usage
+              displayStartSubCategory = returnStartSubCategory == 'ทั้งหมด'
+                  ? null
+                  : '${item['sub_cat_code'] ?? ''}';
+              startSubCategoryController.text = displayStartSubCategory ?? 'ทั้งหมด';
+
+              // Reset other related fields if "ทั้งหมด" is selected
+              if (returnStartSubCategory == 'ทั้งหมด') {
+                displayStartSubCategory = null;
+                returnStartSubCategory = '';
+              } else {
                 if (returnEndSubCategory.isNotEmpty &&
                     returnEndSubCategory != '' &&
                     returnStartSubCategory != '') {
@@ -1592,7 +1616,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                       0) {
                     displayEndSubCategory = displayStartSubCategory;
                     endSubCategory = displayStartSubCategory ?? '';
-                    returnEndSubCategory = returnStartCategory;
+                    returnEndSubCategory = returnStartSubCategory;
                     endSubCategoryController.text =
                         displayStartSubCategory.toString();
                   }
@@ -1604,46 +1628,42 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                       0) {
                     displayEndSubCategory = displayStartSubCategory;
                     endSubCategory = displayStartSubCategory ?? '';
-                    returnEndSubCategory = returnStartCategory;
+                    returnEndSubCategory = returnStartSubCategory;
                     endSubCategoryController.text =
                         displayStartSubCategory.toString();
                   } else {
                     displayEndSubCategory = endSubCategory;
-                    // endSubCategory = displayStartSubCategory;
-                    returnEndSubCategory = returnStartCategory;
+                    returnEndSubCategory = returnStartSubCategory;
                     endSubCategoryController.text = endSubCategory.toString();
                   }
                 }
-                selectLovEndSubCategory();
-                // displayEndSubCategory = null;
-                // returnEndSubCategory = '';
-                // endSubCategoryController.text = '';
-                searchEndSubCatController.clear;
-                selectLovStartBrand();
-                displayStartBrand = null;
-                returnStartBrand = '';
-                startBrandController.text = '';
-                searchStartBrandController.clear;
-                selectLovEndBrand();
-                displayEndBrand = null;
-                returnEndBrand = '';
-                endBrandController.text = '';
-                searchEndBrandController.clear;
-                selectLovStartItem();
-                displayStartItem = null;
-                returnStartItem = '';
-                startItemController.text = '';
-                searchStartItemController.clear;
-                selectLovEndItem();
-                displayEndItem = null;
-                returnEndItem = '';
-                endItemController.text = '';
-                searchEndItemController.clear;
-                isLoading = false;
               }
+              selectLovEndSubCategory();
+              searchEndSubCatController.clear();
+              selectLovStartBrand();
+              displayStartBrand = null;
+              returnStartBrand = '';
+              startBrandController.text = '';
+              searchStartBrandController.clear();
+              selectLovEndBrand();
+              displayEndBrand = null;
+              returnEndBrand = '';
+              endBrandController.text = '';
+              searchEndBrandController.clear();
+              selectLovStartItem();
+              displayStartItem = null;
+              returnStartItem = '';
+              startItemController.text = '';
+              searchStartItemController.clear();
+              selectLovEndItem();
+              displayEndItem = null;
+              returnEndItem = '';
+              endItemController.text = '';
+              searchEndItemController.clear();
               isLoading = false;
             });
             searchStartSubCatController.clear();
+
             if (returnStartSubCategory != 'ทั้งหมด') {
               checkUpdateDataALL(true);
             }
@@ -1678,44 +1698,50 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
             Navigator.of(context).pop();
             setState(() {
               returnEndSubCategory = '${item['sub_cat_code'] ?? ''}';
-              displayEndSubCategory =
-                  '${item['sub_cat_code'] ?? ''}' == 'ทั้งหมด'
-                      ? null
-                      : '${item['sub_cat_code'] ?? ''}';
-              if (displayEndSubCategory.toString().isNotEmpty &&
-                  displayEndSubCategory != '' &&
-                  returnEndSubCategory != '') {
-                endSubCategory = '${item['sub_cat_code']}';
+
+              // If "ทั้งหมด" is selected, set values to null for API usage
+              if (returnEndSubCategory == 'ทั้งหมด') {
+                displayEndSubCategory = null;
+                returnEndSubCategory = '';
               } else {
+                displayEndSubCategory = '${item['sub_cat_code'] ?? ''}';
+              }
+
+              endSubCategoryController.text = displayEndSubCategory ?? 'ทั้งหมด';
+
+              // Reset related fields when "ทั้งหมด" is selected
+              if (returnEndSubCategory == 'ทั้งหมด') {
                 endSubCategory = '';
+                endSubCategoryController.text = '';
+              } else {
+                endSubCategory = displayEndSubCategory ?? '';
               }
-              endSubCategoryController.text =
-                  displayEndSubCategory ?? 'ทั้งหมด';
-              if (returnEndSubCategory != 'ทั้งหมด') {
-                selectLovStartBrand();
-                displayStartBrand = null;
-                returnStartBrand = '';
-                startBrandController.text = '';
-                searchStartBrandController.clear;
-                selectLovEndBrand();
-                displayEndBrand = null;
-                returnEndBrand = '';
-                endBrandController.text = '';
-                searchEndBrandController.clear;
-                selectLovStartItem();
-                displayStartItem = null;
-                returnStartItem = '';
-                startItemController.text = '';
-                searchStartItemController.clear;
-                selectLovEndItem();
-                displayEndItem = null;
-                returnEndItem = '';
-                endItemController.text = '';
-                searchEndItemController.clear;
-                isLoading = false;
-              }
+
+              // Reset dependent fields
+              selectLovStartBrand();
+              displayStartBrand = null;
+              returnStartBrand = '';
+              startBrandController.text = '';
+              searchStartBrandController.clear();
+              selectLovEndBrand();
+              displayEndBrand = null;
+              returnEndBrand = '';
+              endBrandController.text = '';
+              searchEndBrandController.clear();
+              selectLovStartItem();
+              displayStartItem = null;
+              returnStartItem = '';
+              startItemController.text = '';
+              searchStartItemController.clear();
+              selectLovEndItem();
+              displayEndItem = null;
+              returnEndItem = '';
+              endItemController.text = '';
+              searchEndItemController.clear();
+
               isLoading = false;
             });
+
             searchEndSubCatController.clear();
             if (returnEndSubCategory != 'ทั้งหมด') {
               checkUpdateDataALL(true);
@@ -1788,17 +1814,17 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                 // displayEndBrand = null;
                 // returnEndBrand = '';
                 // endBrandController.text = '';
-                searchEndBrandController.clear;
+                searchEndBrandController.clear();
                 selectLovStartItem();
                 displayStartItem = null;
                 returnStartItem = '';
                 startItemController.text = '';
-                searchStartItemController.clear;
+                searchStartItemController.clear();
                 selectLovEndItem();
                 displayEndItem = null;
                 returnEndItem = '';
                 endItemController.text = '';
-                searchEndItemController.clear;
+                searchEndItemController.clear();
                 isLoading = false;
               }
               isLoading = false;
@@ -1893,11 +1919,18 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
             Navigator.of(context).pop();
             setState(() {
               returnStartItem = '${item['item_code'] ?? ''}';
-              displayStartItem = '${item['item_code'] ?? ''}' == 'ทั้งหมด'
+              // If "ทั้งหมด" is selected, set the values to null for API usage
+              displayStartItem = returnStartItem == 'ทั้งหมด'
                   ? null
                   : '${item['item_code'] ?? ''}';
-              startItemController.text = displayStartItem ?? 'ทั้งหมด';
-              if (returnStartItem != 'ทั้งหมด') {
+              startItemController.text =
+                  displayStartItem ?? 'ทั้งหมด';
+
+              // Reset other related fields if "ทั้งหมด" is selected
+              if (returnStartItem == 'ทั้งหมด') {
+                displayStartItem = null;
+                returnStartItem = '';
+              } else {
                 if (returnEndItem.isNotEmpty &&
                     returnEndItem != '' &&
                     returnStartItem != '') {
@@ -1908,7 +1941,8 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                     displayEndItem = displayStartItem;
                     endItem = displayStartItem ?? '';
                     returnEndItem = returnStartItem;
-                    endItemController.text = displayStartItem.toString();
+                    endItemController.text =
+                        displayStartItem.toString();
                   }
                 } else if (returnEndItem == '' &&
                     endItem.toString().isNotEmpty) {
@@ -1919,23 +1953,21 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                     displayEndItem = displayStartItem;
                     endItem = displayStartItem ?? '';
                     returnEndItem = returnStartItem;
-                    endItemController.text = displayStartItem.toString();
+                    endItemController.text =
+                        displayStartItem.toString();
                   } else {
                     displayEndItem = endItem;
                     returnEndItem = returnStartItem;
                     endItemController.text = endItem.toString();
                   }
                 }
-                selectLovEndItem();
-                // displayEndItem = null;
-                // returnEndItem = '';
-                // endItemController.text = '';
-                searchEndItemController.clear;
-                // isLoading = false;
               }
+              selectLovEndItem();
+              searchEndItemController.clear();
               isLoading = false;
             });
             searchStartItemController.clear();
+
             if (returnStartItem != 'ทั้งหมด') {
               checkUpdateDataALL(true);
             }
@@ -1968,22 +2000,34 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           titleText: (item) => '${item['item_code'] ?? ''}',
           subtitleText: (item) => '${item['itm_name'] ?? ''}',
           onTap: (item) {
+            isLoading = true;
             Navigator.of(context).pop();
             setState(() {
-              // หากค่า item_code คือ 'ทั้งหมด' จะตั้งค่าเป็น null
-              displayEndItem =
-                  item['item_code'] == 'ทั้งหมด' ? null : item['item_code'];
-              endItemController.text = displayEndItem ?? 'ทั้งหมด';
-              if (displayEndItem.toString().isNotEmpty &&
-                  displayEndItem != 'ทั้งหมด' &&
-                  returnEndItem != '') {
-                endItem = '${item['item_code']}';
+              returnEndItem = '${item['item_code'] ?? ''}';
+
+              // If "ทั้งหมด" is selected, set values to null for API usage
+              if (returnEndItem == 'ทั้งหมด') {
+                displayEndItem = null;
+                returnEndItem = '';
               } else {
+                displayEndItem = '${item['item_code'] ?? ''}';
+              }
+
+              endItemController.text =
+                  displayEndItem ?? 'ทั้งหมด';
+
+              // Reset related fields when "ทั้งหมด" is selected
+              if (returnEndItem == 'ทั้งหมด') {
                 endItem = '';
-              } 
+                endItemController.text = '';
+              } else {
+                endItem = displayEndItem ?? '';
+              }
+              isLoading = false;
             });
+
             searchEndItemController.clear();
-            if (item['item_code'] != 'ทั้งหมด') {
+            if (returnEndItem != 'ทั้งหมด') {
               checkUpdateDataALL(true);
             }
           },

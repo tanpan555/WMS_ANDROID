@@ -234,7 +234,7 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                                       children: [
                                         Center(
                                           child: Text(
-                                            item['ware_code'] ?? '',
+                                            'คลังสินค้า : ${item['ware_code'] ?? ''}',
                                             style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16,
@@ -246,8 +246,63 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                                         const Divider(
                                             color: Colors.black26,
                                             thickness: 1),
-                                        Text(item['location_code'] ?? ''),
-                                        Text(item['nb_location_name'] ?? ''),
+                                        // Text(item['location_code'] ?? ''),
+                                        // Text(item['nb_location_name'] ?? ''),
+                                        SizedBox(
+                                          child: Row(
+                                            children: [
+                                              const Text(
+                                                'ตำแหน่งจัดเก็บ : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
+                                              ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item['location_code'] ??
+                                                    '', // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['location_code'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        SizedBox(
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize
+                                                .min, // ให้ Row ใช้ขนาดที่จำเป็น
+                                            children: [
+                                              const Text(
+                                                'ตำแหน่งจัดเก็บ : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
+                                              ),
+                                              Flexible(
+                                                // ใช้ Flexible แทน Expanded เพื่อให้ขยายตามขนาดที่จำเป็น
+                                                child: CustomContainerStyles
+                                                    .styledContainer(
+                                                  item['nb_location_name'],
+                                                  child: Text(
+                                                    item['nb_location_name'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                    softWrap:
+                                                        true, // เปิดให้ตัดบรรทัดเมื่อความยาวเกิน
+                                                    overflow: TextOverflow
+                                                        .visible, // แสดงข้อความทั้งหมด
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),

@@ -28,6 +28,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   List<Map<String, dynamic>> locItems = [];
   bool isLoading = true;
   TextEditingController searchController = TextEditingController();
+  bool _isAllSelected = false;
 
   void _selectAll(bool value) {
     if (mounted) {
@@ -257,43 +258,84 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
             //   },
             // ),
             // const SizedBox(height: 20),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.start,
+            //   children: [
+            //     ElevatedButton(
+            //       onPressed: () {
+            //         _selectAll(true); // เลือกทั้งหมด (ติ๊กถูกทุกแถว)
+            //         for (var row in filteredLocItems) {
+            //           fetchCheck(row['location_code'],
+            //               row['ware_code']); // ส่งคำขอ POST สำหรับทุกแถวที่เลือก
+            //         }
+            //       },
+            //       child: const Text(
+            //         'Select All',
+            //         style: TextStyle(
+            //           color: Color.fromARGB(255, 0, 0, 0),
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //       ),
+            //       style: AppStyles.cancelButtonStyle(),
+            //     ),
+            //     const SizedBox(width: 10),
+            //     ElevatedButton(
+            //       onPressed: () {
+            //         _deselectAll(); // ยกเลิกการเลือกทั้งหมด (ติ๊กออกทุกแถว)
+            //         for (var row in filteredLocItems) {
+            //           deleteData(row[
+            //               'ware_code']); // ส่งคำขอ DELETE สำหรับทุกแถวที่ติ๊กออก
+            //         }
+            //       },
+            //       child: const Text(
+            //         'Deselect All',
+            //         style: TextStyle(
+            //           color: Color.fromARGB(255, 0, 0, 0),
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //       ),
+            //       style: AppStyles.cancelButtonStyle(),
+            //     ),
+            //   ],
+            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    _selectAll(true); // เลือกทั้งหมด (ติ๊กถูกทุกแถว)
-                    for (var row in filteredLocItems) {
-                      deleteData(row[
-                          'ware_code']); // ส่งคำขอ POST สำหรับทุกแถวที่เลือก
-                    }
+                Checkbox(
+                  value: _isAllSelected,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _isAllSelected = value ?? false;
+                      if (_isAllSelected) {
+                        _selectAll(true);
+                        for (var row in filteredLocItems) {
+                          fetchCheck(row['location_code'],
+                          row['ware_code']);
+                        }
+                      } else {
+                        _deselectAll();
+                        for (var row in filteredLocItems) {
+                          deleteData(row['ware_code']);
+                        }
+                      }
+                    });
                   },
-                  child: const Text(
-                    'Select All',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  style: AppStyles.cancelButtonStyle(),
+                  fillColor: WidgetStateProperty.resolveWith((states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return Colors.deepPurple[400];
+                    }
+                    return Colors.white;
+                  }),
+                  // activeColor: Colors.deepPurple[300], // สีของ Checkbox เมื่อถูกเลือก
+                  // checkColor: Colors.white, // สีของเครื่องหมายถูก
                 ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    _deselectAll(); // ยกเลิกการเลือกทั้งหมด (ติ๊กออกทุกแถว)
-                    for (var row in filteredLocItems) {
-                      deleteData(row[
-                          'ware_code']); // ส่งคำขอ DELETE สำหรับทุกแถวที่ติ๊กออก
-                    }
-                  },
-                  child: const Text(
-                    'Deselect All',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontWeight: FontWeight.bold,
-                    ),
+                const Text(
+                  'All',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  style: AppStyles.cancelButtonStyle(),
                 ),
               ],
             ),
@@ -357,7 +399,9 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
       color: Colors.white,
       child: Column(
         children: locItems.map((row) {
-          return Padding(
+          return Column(
+              children: [
+                Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -397,31 +441,44 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text(
-                    row['ware_code'] ?? '',
-                    style: const TextStyle(fontSize: 14),
-                    // textAlign: TextAlign.right,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    row['location_code'] ?? '',
-                    style: const TextStyle(fontSize: 14),
-                    // textAlign: TextAlign.right,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    row['location_name'] ?? '',
-                    style: const TextStyle(fontSize: 14),
-                    // textAlign: TextAlign.right,
-                    overflow: TextOverflow.ellipsis,
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '${row['location_code'] ?? ''}\n',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold, // ทำให้ตัวหนา
+                          ),
+                        ),
+                        TextSpan(
+                          text: '${row['ware_code'] ?? ''}  ',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal, // ตัวปกติ
+                          ),
+                        ),
+                        TextSpan(
+                          text: '${row['location_name'] ?? ''}',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal, // ตัวปกติ
+                          ),
+                        ),
+                      ],
+                    ),
+                    overflow: TextOverflow.visible,
+                    softWrap: true,
                   ),
                 ),
               ],
             ),
+          ),
+          const Divider(
+                color: Colors.black54,
+                thickness: 1,
+              ),
+            ],
           );
         }).toList(),
       ),
