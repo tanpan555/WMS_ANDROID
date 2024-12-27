@@ -780,7 +780,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
-                                        text: 'เลขที่ใบเบิก WMS',
+                                        text: 'เลขที่เอกสาร WMS',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize:
