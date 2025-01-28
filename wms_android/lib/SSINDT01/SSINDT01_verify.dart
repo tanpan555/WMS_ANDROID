@@ -219,7 +219,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
 
   Future<void> sendGetRequestlineWMS() async {
     final url =
-        '${gb.IP_API}/apex/wms/SSINDT01/Step_4_pull_po/${widget.poReceiveNo}/${gb.P_OU_CODE}';
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_4_pull_po/${widget.poReceiveNo}/${gb.P_ERP_OU_CODE}';
 
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
