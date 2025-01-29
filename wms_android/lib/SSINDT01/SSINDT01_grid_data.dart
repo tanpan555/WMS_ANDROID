@@ -11,6 +11,7 @@ import 'SSINDT01_verify.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSINDT01_lotdetails.dart';
+import 'package:wms_android/centered_message.dart';
 
 class Ssindt01Grid extends StatefulWidget {
   final String poReceiveNo;
@@ -348,7 +349,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                   onPressed: () {
                     // ตรวจสอบการแก้ไข
                     final currentQuantity =
-                        data['receive_qty']?.toString() ?? '';
+                        data['receive_qty']?.toString() ?? '-';
                     final editedQuantity =
                         receiveQtyController.text.replaceAll(',', '');
 
@@ -437,19 +438,13 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           controller: receiveQtyController,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            FilteringTextInputFormatter
-                                .digitsOnly, // Allows only numbers
+                            FilteringTextInputFormatter.digitsOnly,
+                            // Allows only numbers
                           ],
                           decoration: const InputDecoration(
                             labelText: 'จำนวนรับ',
                             border: OutlineInputBorder(),
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'กรุณากรอกจำนวนรับ';
-                            }
-                            return null;
-                          },
                           onChanged: (value) {
                             if (value.isEmpty) {
                               setState(() {
@@ -465,34 +460,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               ),
             ],
           ),
-          // actions: <Widget>[
-          //   Center(
-          //     child: ElevatedButton(
-          //       style: AppStyles.ConfirmChecRecievekButtonStyle(),
-          //       onPressed: () async {
-          //         if (formKey.currentState?.validate() ?? false) {
-          //           final String cleanedText =
-          //               receiveQtyController.text.replaceAll(',', '');
-          //           try {
-          //             final newQuantity = double.parse(cleanedText).toString();
-
-          //             // อัปเดตค่าที่การ์ด
-          //             await updateReceiveQty(
-          //                 data['rowid'],
-          //                 newQuantity,
-          //                 data['rcvlot_supplier'].toString(),
-          //                 data['rcvlot_size'].toString());
-          //             Navigator.of(context).pop(); // ปิด Popup
-          //           } catch (e) {
-          //             print('Error parsing quantity: $e');
-          //           }
-          //         }
-          //       },
-          //       child: Image.asset('assets/images/check-mark.png',
-          //           width: 30, height: 30),
-          //     ),
-          //   ),
-          // ],
           actions: <Widget>[
             Center(
               child: ElevatedButton(
@@ -511,26 +478,43 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
                     // อัปเดตสถานะใน state
                     setState(() {
-                      data['pack_qty'] = null;
+                      data['receive_qty'] = null;
                     });
 
                     Navigator.of(context).pop(); // ปิด Popup
                   } else {
                     try {
-                      final newQuantity = double.parse(cleanedText).toString();
-
+                      final newQuantity = double.parse(cleanedText);
+                      print('Updating receive_qty with value: $newQuantity');
+                      if (newQuantity <= 0) {
+                        // แสดง popup แจ้งเตือนเมื่อค่าที่ป้อนเป็น 0 หรือน้อยกว่า
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DialogStyles.alertMessageDialog(
+                              context: context,
+                              content: Text('โปรดใส่เลขที่มากกว่า 0'),
+                              onClose: () {
+                                Navigator.of(context).pop(); // ปิด dialog
+                              },
+                              onConfirm: () async {
+                                Navigator.of(context).pop(); // ปิด dialog
+                              },
+                            );
+                          },
+                        );
+                        return; // หยุดการทำงาน ไม่ให้ดำเนินการต่อ
+                      }
                       // อัปเดตฐานข้อมูลด้วยค่าที่กรอก
                       await updateReceiveQty(
                         data['rowid'], // poPackCode
-                        newQuantity, // itemCode
+                        newQuantity.toString(), // itemCode
                         data['rcvlot_supplier'], // poPackQty
                         data['rcvlot_size'], // ratio
                       );
 
                       // อัปเดตสถานะใน state
                       setState(() {
-                        // item['pack_qty'] = double.parse(cleanedText);
-                        // fetchGridItems();
                         sendGetRequestlineWMS();
                       });
 
@@ -1811,15 +1795,21 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             );
                           }).toList(),
                         )
-                      : Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 150),
-                            child: Text(
-                              'No data found',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
+                      : const Column(
+                          children: [
+                            SizedBox(height: 60.0),
+                            Center(child: CenteredMessage())
+                          ],
                         ),
+                  // Center(
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.only(top: 150),
+                  //       child: Text(
+                  //         'No data found',
+                  //         style: TextStyle(color: Colors.white),
+                  //       ),
+                  //     ),
+                  //   ),
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -8,6 +8,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:intl/intl.dart';
 import 'SSFGDT04_SCANBARCODE.dart';
 import '../styles.dart';
+import 'package:wms_android/centered_message.dart';
 
 class SSFGDT04_GRID extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจาก lov
@@ -174,12 +175,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             labelText: 'จำนวนรับ',
                             border: OutlineInputBorder(),
                           ),
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'กรุณากรอกจำนวนรับ';
-                          //   }
-                          //   return null;
-                          // },
                           onChanged: (value) {
                             if (value.isEmpty) {
                               setState(() {
@@ -231,7 +226,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
                       // อัปเดตสถานะใน state
                       setState(() {
-                        // item['pack_qty'] = double.parse(cleanedText);
                         fetchGridItems();
                       });
 
@@ -284,252 +278,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     );
   }
 
-  // Widget _buildInfoRow1(Map<String, String> info) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 4.0),
-  //     child: Row(
-  //       children: info.entries.map((entry) {
-  //         return Expanded(
-  //           child: Padding(
-  //             padding: const EdgeInsets.symmetric(horizontal: 40),
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               children: [
-  //                 // Key
-  //                 Container(
-  //                   height: 30,
-  //                   alignment: Alignment.centerLeft,
-  //                   child: Text(
-  //                     entry.key,
-  //                     style: TextStyle(
-  //                       color: const Color.fromARGB(255, 0, 0, 0),
-  //                       fontSize: 14,
-  //                     ),
-  //                     softWrap: false,
-  //                     textAlign: TextAlign.left,
-  //                   ),
-  //                 ),
-  //                 SizedBox(width: 18),
-
-  //                 Container(
-  //                   constraints: BoxConstraints(
-  //                     minWidth: 80,
-  //                     maxWidth: 160,
-  //                   ),
-  //                   height: 30,
-  //                   child: TextField(
-  //                     enabled: false,
-  //                     controller: TextEditingController(text: entry.value),
-  //                     decoration: InputDecoration(
-  //                       filled: true,
-  //                       fillColor: const Color.fromARGB(255, 255, 255, 255),
-  //                       border: InputBorder.none,
-  //                       contentPadding: const EdgeInsets.symmetric(
-  //                         vertical: 16,
-  //                         horizontal: 10.0,
-  //                       ),
-  //                     ),
-  //                     style: TextStyle(
-  //                       color: const Color.fromARGB(255, 0, 0, 0),
-  //                       fontSize: 14,
-  //                     ),
-  //                     textAlign: TextAlign.right,
-  //                     readOnly: true,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       }).toList(),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildInfoRow2(Map<String, String> info) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 4.0),
-  //     child: Row(
-  //       children: info.entries.map((entry) {
-  //         return Expanded(
-  //           child: Padding(
-  //             padding: const EdgeInsets.symmetric(horizontal: 15),
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               children: [
-  //                 // Key
-  //                 Container(
-  //                   height: 30,
-  //                   alignment: Alignment.centerLeft,
-  //                   child: Text(
-  //                     entry.key,
-  //                     style: TextStyle(
-  //                       color: const Color.fromARGB(255, 0, 0, 0),
-  //                       fontSize: 14,
-  //                     ),
-  //                     softWrap: false,
-  //                     textAlign: TextAlign.left,
-  //                   ),
-  //                 ),
-  //                 SizedBox(width: 18),
-
-  //                 Container(
-  //                   constraints: BoxConstraints(
-  //                     minWidth: 80,
-  //                     maxWidth: 160,
-  //                   ),
-  //                   height: 30,
-  //                   child: TextField(
-  //                     enabled: false,
-  //                     controller: TextEditingController(text: entry.value),
-  //                     decoration: InputDecoration(
-  //                       filled: true,
-  //                       fillColor: const Color.fromARGB(255, 255, 255, 255),
-  //                       border: InputBorder.none,
-  //                       contentPadding: const EdgeInsets.symmetric(
-  //                         vertical: 16,
-  //                         horizontal: 10.0,
-  //                       ),
-  //                     ),
-  //                     style: TextStyle(
-  //                       color: const Color.fromARGB(255, 0, 0, 0),
-  //                       fontSize: 14,
-  //                     ),
-  //                     textAlign: TextAlign.left,
-  //                     readOnly: true,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       }).toList(),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildInfoRow3(Map<String, String> info) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 4.0),
-  //     child: Row(
-  //       children: info.entries.map((entry) {
-  //         return Expanded(
-  //           child: Padding(
-  //             padding: const EdgeInsets.symmetric(horizontal: 32),
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               children: [
-  //                 // Key
-  //                 Container(
-  //                   height: 30,
-  //                   alignment: Alignment.centerLeft,
-  //                   child: Text(
-  //                     entry.key,
-  //                     style: TextStyle(
-  //                       color: const Color.fromARGB(255, 0, 0, 0),
-  //                       fontSize: 14,
-  //                     ),
-  //                     softWrap: false,
-  //                     textAlign: TextAlign.left,
-  //                   ),
-  //                 ),
-  //                 SizedBox(width: 18),
-
-  //                 Container(
-  //                   constraints: BoxConstraints(
-  //                     minWidth: 80,
-  //                     maxWidth: 160,
-  //                   ),
-  //                   height: 30,
-  //                   child: TextField(
-  //                     enabled: false,
-  //                     controller: TextEditingController(text: entry.value),
-  //                     decoration: InputDecoration(
-  //                       filled: true,
-  //                       fillColor: const Color.fromARGB(255, 255, 255, 255),
-  //                       border: InputBorder.none,
-  //                       contentPadding: const EdgeInsets.symmetric(
-  //                         vertical: 18,
-  //                         horizontal: 10.0,
-  //                       ),
-  //                     ),
-  //                     style: TextStyle(
-  //                       color: const Color.fromARGB(255, 0, 0, 0),
-  //                       fontSize: 14,
-  //                     ),
-  //                     textAlign: TextAlign.left,
-  //                     readOnly: true,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       }).toList(),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildInfoRow4(Map<String, String> info) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 4.0),
-  //     child: Row(
-  //       children: info.entries.map((entry) {
-  //         return Expanded(
-  //           child: Padding(
-  //             padding: const EdgeInsets.symmetric(horizontal: 28),
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 // Key
-  //                 Container(
-  //                   height: 30,
-  //                   // alignment: Alignment.centerLeft,
-  //                   child: Text(
-  //                     entry.key,
-  //                     style: TextStyle(
-  //                       color: const Color.fromARGB(255, 0, 0, 0),
-  //                       fontSize: 14,
-  //                     ),
-  //                     softWrap: false,
-  //                     textAlign: TextAlign.left,
-  //                   ),
-  //                 ),
-  //                 SizedBox(width: 18),
-
-  //                 Container(
-  //                   constraints: BoxConstraints(
-  //                     minWidth: 80,
-  //                     maxWidth: 160,
-  //                   ),
-  //                   height: 50,
-  //                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-  //                   color: const Color.fromARGB(255, 255, 255, 255),
-  //                   child: Align(
-  //                     alignment: Alignment.centerLeft,
-  //                     child: Text(
-  //                       entry.value,
-  //                       style: TextStyle(
-  //                         color: const Color.fromARGB(255, 0, 0, 0),
-  //                         fontSize: 14,
-  //                       ),
-  //                       textAlign: TextAlign.left,
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       }).toList(),
-  //     ),
-  //   );
-  // }
-
   Future<void> fetchUpdate(String? itemCode, String? poPackCode,
       String? poPackQty, String? rowid) async {
     final url = '${gb.IP_API}/apex/wms/SSFGDT04/Step_3_set_pack_QTY';
@@ -537,11 +285,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     final headers = {
       'Content-Type': 'application/json',
     };
-    // ตรวจสอบว่า poPackQty ไม่เป็น null หรือว่าง
-    // if (poPackQty == null || poPackQty.isEmpty) {
-    //   print('Error: poPackQty is null or empty');
-    //   return;
-    // }
     final body = jsonEncode({
       'item_code': itemCode,
       'pack_code': poPackCode,
@@ -984,15 +727,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     ),
                     const SizedBox(height: 10),
                     gridItems.isEmpty
-                        ? Center(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 100),
-                              child: Text(
-                                'No data found',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          )
+                        ? const Column(
+                              children: [
+                                SizedBox(height: 60.0),
+                                Center(child: CenteredMessage())
+                              ],
+                            )
                         : ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
@@ -1013,142 +753,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                 final item = dataCard[actualIndex];
 
                                 return
-                                    // Card(
-                                    //   elevation: 8.0,
-                                    //   margin:
-                                    //       const EdgeInsets.symmetric(vertical: 8.0),
-                                    //   shape: RoundedRectangleBorder(
-                                    //     borderRadius: BorderRadius.circular(15.0),
-                                    //   ),
-                                    //   color: Colors.lightBlue[100],
-                                    //   child: InkWell(
-                                    //     borderRadius: BorderRadius.circular(15.0),
-                                    //     child: Stack(
-                                    //       children: [
-                                    //         Padding(
-                                    //           padding: const EdgeInsets.all(8),
-                                    //           child: Column(
-                                    //             mainAxisSize: MainAxisSize.min,
-                                    //             mainAxisAlignment:
-                                    //                 MainAxisAlignment.start,
-                                    //             children: [
-                                    //               Center(
-                                    //                 child: Text(
-                                    //                   item['item_code'] ?? '',
-                                    //                   style: const TextStyle(
-                                    //                     fontWeight: FontWeight.bold,
-                                    //                     fontSize: 20,
-                                    //                   ),
-                                    //                   textAlign: TextAlign.center,
-                                    //                 ),
-                                    //               ),
-                                    //               const Divider(
-                                    //                   color: Colors.black26,
-                                    //                   thickness: 1),
-                                    //               const SizedBox(height: 8),
-                                    //               _buildInfoRow1({
-                                    //                 'จำนวนรับ :': item[
-                                    //                             'pack_qty'] !=
-                                    //                         null
-                                    //                     ? NumberFormat('#,###')
-                                    //                         .format(
-                                    //                             item['pack_qty'])
-                                    //                     : '',
-                                    //               }),
-                                    //               _buildInfoRow2({
-                                    //                 'จำนวน Pallet :':
-                                    //                     item['count_qty'] ?? '',
-                                    //               }),
-                                    //               _buildInfoRow3({
-                                    //                 'จำนวนรวม :':
-                                    //                     item['count_qty_in'] ?? '',
-                                    //               }),
-                                    //               _buildInfoRow4({
-                                    //                 'Item Desc :':
-                                    //                     item['nb_item_name'] ?? '',
-                                    //               }),
-                                    //               const SizedBox(height: 8),
-                                    //               // Row with delete and edit buttons
-                                    //               Row(
-                                    //                 mainAxisAlignment: MainAxisAlignment
-                                    //                     .spaceBetween, // Align buttons
-                                    //                 children: [
-                                    //                   // Delete button as image
-                                    //                   IconButton(
-                                    //                     icon: Image.asset(
-                                    //                       'assets/images/bin.png', // Delete image path
-                                    //                       width: 30,
-                                    //                       height: 30,
-                                    //                     ),
-                                    //                     onPressed: () async {
-                                    //                       showDialog(
-                                    //                         context: context,
-                                    //                         builder: (BuildContext
-                                    //                             context) {
-                                    //                           return DialogStyles
-                                    //                               .alertMessageCheckDialog(
-                                    //                             context: context,
-                                    //                             content: const Text(
-                                    //                                 'ต้องการลบรายการหรือไม่?'),
-                                    //                             onClose: () {
-                                    //                               Navigator.of(
-                                    //                                       context)
-                                    //                                   .pop(); // Close the dialog
-                                    //                             },
-                                    //                             onConfirm:
-                                    //                                 () async {
-                                    //                               Navigator.of(
-                                    //                                       context)
-                                    //                                   .pop(); // Close the dialog
-                                    //                               // await fetchGetPo(); // Call the fetchGetPo function after confirming
-                                    //                               final poItemCode =
-                                    //                                   item[
-                                    //                                       'item_code'];
-                                    //                               final poSeq =
-                                    //                                   item['seq'];
-                                    //                               await delete(
-                                    //                                   widget
-                                    //                                       .po_doc_no,
-                                    //                                   widget
-                                    //                                       .po_doc_type,
-                                    //                                   poSeq,
-                                    //                                   poItemCode);
-                                    //                               if (mounted) {
-                                    //                                 setState(() {
-                                    //                                   gridItems.removeWhere((item) =>
-                                    //                                       item['item_code'] ==
-                                    //                                           poItemCode &&
-                                    //                                       item['seq'] ==
-                                    //                                           poSeq);
-                                    //                                 });
-                                    //                               }
-                                    //                             },
-                                    //                           );
-                                    //                         },
-                                    //                       );
-                                    //                     },
-                                    //                   ),
-                                    //                   // Edit button as image
-                                    //                   IconButton(
-                                    //                     icon: Image.asset(
-                                    //                       'assets/images/edit.png', // Edit image path
-                                    //                       width: 30,
-                                    //                       height: 30,
-                                    //                     ),
-                                    //                     onPressed: () {
-                                    //                       _showEditDialog(
-                                    //                           context, item);
-                                    //                     },
-                                    //                   ),
-                                    //                 ],
-                                    //               ),
-                                    //             ],
-                                    //           ),
-                                    //         ),
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    // );
+                                    // Card
                                     Card(
                                   elevation: 4.0,
                                   margin: EdgeInsets.symmetric(vertical: 8.0),

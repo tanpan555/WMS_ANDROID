@@ -1308,8 +1308,8 @@ class _LotDialogState extends State<LotDialog> {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: InkWell(
-          onTap: () {
-            showDetailsLotDialog(
+        onTap: () {
+          showDetailsLotDialog(
             context,
             item,
             widget.recSeq,
@@ -1319,24 +1319,22 @@ class _LotDialogState extends State<LotDialog> {
               setState(() {});
             },
           );
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(15.0), // เพิ่มพื้นที่รอบๆปุ่ม
-            child: Container(
-              width: 30,
-              height: 30,
-              child: Image.asset(
-                'assets/images/edit.png',
-                fit: BoxFit.contain,
-              ),
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(15.0), // เพิ่มพื้นที่รอบๆปุ่ม
+          child: Container(
+            width: 30,
+            height: 30,
+            child: Image.asset(
+              'assets/images/edit.png',
+              fit: BoxFit.contain,
             ),
           ),
         ),
+      ),
     );
   }
 
-// Helper method to build each info row
-  // Helper method to build each info row
   Widget _buildInfoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -1345,13 +1343,9 @@ class _LotDialogState extends State<LotDialog> {
         crossAxisAlignment: CrossAxisAlignment
             .center, // Align both label and value to the center
         children: [
-          Text(
-            label,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(width: 8),
           Flexible(
-            // Flexible allows the value to take only the necessary space
             child: CustomContainerStyles.styledContainer(
               value, // Pass the value to determine the container style
               padding:
