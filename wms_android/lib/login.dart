@@ -79,6 +79,15 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     try {
+      print(Uri.parse('${globals.IP_API}/apex/wms/login_wms/process'));
+      print({
+          'P_USERNAME': username,
+          'P_PASSWORD': password,
+          'P_OU': 'LIK',
+          'P_DIV': 'HQ',
+          'APP_ALIAS': 'WMS',
+          'P_HTTP_HOST': '172.16.0.125:8080',
+        });
       final response = await http.post(
         Uri.parse('${globals.IP_API}/apex/wms/login_wms/process'),
         body: {
@@ -87,10 +96,10 @@ class _LoginPageState extends State<LoginPage> {
           'P_OU': 'LIK',
           'P_DIV': 'HQ',
           'APP_ALIAS': 'WMS',
-          'P_HTTP_HOST': '172.16.0.82:8888',
+          'P_HTTP_HOST': '172.16.0.125:8080',
         },
       );
-
+      print('response.statusCode : ${response.statusCode}');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['PO_STATUS'] == '0') {

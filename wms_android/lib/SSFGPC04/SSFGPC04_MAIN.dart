@@ -64,7 +64,7 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
   String message = '';
   Future<void> deleteData() async {
     final String url =
-        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_clear_temp';
+        '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_clear_temp';
     // final String url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_clear_temp';
     print('Sending DELETE to: $url');
     try {

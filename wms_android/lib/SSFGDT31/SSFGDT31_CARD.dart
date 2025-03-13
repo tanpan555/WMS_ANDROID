@@ -127,10 +127,10 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
     }
     final String requestUrl = url ??
         '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_DataCard/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${globals.ATTR1}/${widget.pWareCode}/${widget.pStatusDESC}/${widget.pDocDate}/${widget.pSoNo}/${globals.BROWSER_LANGUAGE}';
-
+    print(requestUrl);
     try {
       final response = await http.get(Uri.parse(requestUrl));
-
+      print(Uri.parse(requestUrl));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final parsedResponse = json.decode(responseBody);

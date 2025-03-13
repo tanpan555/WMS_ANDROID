@@ -1649,13 +1649,13 @@ class CardStyles {
                             ),
                           ),
                           const SizedBox(width: 8),
-                          if (showON = true) ...[
+                          if (showON == true) ...[
                             Image.asset(
                               'assets/images/rt_machine_on.png',
                               width: 50,
                               height: 50,
                             )
-                          ] else if (showON = false) ...[
+                          ] else if (showON == false) ...[
                             Image.asset(
                               'assets/images/rt_machine_off.png',
                               width: 50,

@@ -124,10 +124,6 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
         dataGridStatus = 'สภาพปกติ/ของดี'; //  เก็บชื่อ status barcode
         statusGridBarcode = '01'; // เก็บ status barcode
         dataGridStatusBarcodeController.text = 'สภาพปกติ/ของดี';
-        if (globals.SSFGDT12_LocBarcode.isNotEmpty) {
-          dataLocator = globals.SSFGDT12_LocBarcode;
-          dataLocatorListBarcodeController.text = globals.SSFGDT12_LocBarcode;
-        }
       });
     }
   }
@@ -269,8 +265,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
               showExitAlertDialog(messageSubmit);
             }
             if (statusSubmit == '0') {
-              // dataLocator = '';
-              // dataLocatorListBarcodeController.clear();
+              dataLocator = '';
+              dataLocatorListBarcodeController.clear();
 
               barcodeTextString = '';
               barcodeTextController.clear();
@@ -598,7 +594,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                       fetchDataLocator();
                       fetchDataGradeStatus();
                       setState(() {
-                        // dataLocator = '';
+                        dataLocator = '';
                         barcodeTextString = '';
                         wareCodeBarcode = '';
                         itemCodeBarcode = '';
@@ -608,7 +604,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                         dataGridStatus = 'สภาพปกติ/ของดี';
                         statusGridBarcode = '01';
                         dataGridStatusBarcodeController.text = 'สภาพปกติ/ของดี';
-                        // dataLocatorListBarcodeController.clear();
+                        dataLocatorListBarcodeController.clear();
                         dataLocatorList.clear();
                         barcodeTextController.clear();
                         wareCodeBarcodeController.clear();
@@ -672,8 +668,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
     FocusScope.of(context).requestFocus(_focusNode);
     if (mounted) {
       setState(() {
-        // dataLocator = '';
-        // dataLocatorListBarcodeController.clear();
+        dataLocator = '';
+        dataLocatorListBarcodeController.clear();
 
         barcodeTextString = '';
         barcodeTextController.clear();
@@ -716,7 +712,6 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
             Navigator.of(context).pop();
             setState(() {
               dataLocator = item['location_code'];
-              globals.SSFGDT12_LocBarcode = item['location_code'];
               dataLocatorListBarcodeController.text = dataLocator;
               // -----------------------------------------
               print(

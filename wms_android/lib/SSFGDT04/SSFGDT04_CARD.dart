@@ -45,7 +45,6 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   String data_null = 'null';
   String statusCard = '';
   String messageCard = '';
-  String? goToStep;
   String sessionID = gb.APP_SESSION;
   String pDocNoGetInHead = '';
   String pDocTypeGetInHead = '';
@@ -181,7 +180,6 @@ print('URL : $requestUrl ');
     if (currentPage > 0) {
       setState(() {
         currentPage--;
-        // No need to call fetchData here, just update the UI
       });
       _scrollToTop();
     }
@@ -191,7 +189,6 @@ print('URL : $requestUrl ');
     if ((currentPage + 1) * itemsPerPage < dataCard.length) {
       setState(() {
         currentPage++;
-        // No need to call fetchData here, just update the UI
       });
       _scrollToTop();
     }

@@ -470,7 +470,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartLoc'
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartLoc'
           '/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${returnStartWare.isEmpty ? 'null' : returnStartWare}'
           '/${returnEndWare.isEmpty ? 'null' : returnEndWare}'));
 
@@ -508,7 +508,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndLoc'
+          '${globals.IP_API}${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndLoc'
           '/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${returnStartWare.isEmpty ? 'null' : returnStartWare}'
           '/${returnEndWare.isEmpty ? 'null' : returnEndWare}/${returnStartLoc.isEmpty ? 'null' : returnStartLoc}'));
 
@@ -546,7 +546,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartGroup'));
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartGroup'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -582,7 +582,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndGroup'
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndGroup'
           '/${returnStartGroup.isEmpty ? 'null' : returnStartGroup}'));
 
       if (response.statusCode == 200) {
@@ -619,7 +619,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartCategory'
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartCategory'
           '/${returnStartGroup.isEmpty ? 'null' : returnStartGroup}/${returnEndGroup.isEmpty ? 'null' : returnEndGroup}'));
 
       if (response.statusCode == 200) {
@@ -656,7 +656,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndCategory'
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndCategory'
           '/${returnStartGroup.isEmpty ? 'null' : returnStartGroup}'
           '/${returnEndGroup.isEmpty ? 'null' : returnEndGroup}'
           '/${returnStartCategory.isEmpty ? 'null' : returnEndCategory}'));
@@ -695,7 +695,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartSubCategory'
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartSubCategory'
           '/${returnStartGroup.isEmpty ? 'null' : returnStartGroup}'
           '/${returnEndGroup.isEmpty ? 'null' : returnEndGroup}'
           '/${returnStartCategory.isEmpty ? 'null' : returnStartCategory}'
@@ -735,7 +735,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndSubCategory'
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndSubCategory'
           '/${returnStartGroup.isEmpty ? 'null' : returnStartGroup}'
           '/${returnEndGroup.isEmpty ? 'null' : returnEndGroup}'
           '/${returnStartCategory.isEmpty ? 'null' : returnStartCategory}'
@@ -776,7 +776,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartItem'
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartItem'
           '/${globals.BROWSER_LANGUAGE}'
           '/${returnStartGroup.isEmpty ? 'null' : returnStartGroup}'
           '/${returnEndGroup.isEmpty ? 'null' : returnEndGroup}'
@@ -819,7 +819,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndItem'
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndItem'
           '/${globals.BROWSER_LANGUAGE}'
           '/${returnStartGroup.isEmpty ? 'null' : returnStartGroup}'
           '/${returnEndGroup.isEmpty ? 'null' : returnEndGroup}'
@@ -860,13 +860,13 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
   }
 
   Future<void> getPDFCard() async {
-    print('http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_GETPDFCard'
+    print('${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_GETPDFCard'
         '/${globals.P_OU_NAME}/${globals.P_ERP_OU_CODE}'
         '/${globals.BROWSER_LANGUAGE}/${globals.APP_USER}/${globals.P_DS_PDF}');
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_GETPDFCard'
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_GETPDFCard'
           '/${globals.P_OU_NAME}/${globals.P_ERP_OU_CODE}'
           '/${globals.BROWSER_LANGUAGE}/${globals.APP_USER}/${globals.P_DS_PDF}'));
 
@@ -1018,7 +1018,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_GETPDFSheet'
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_GETPDFSheet'
           '/${globals.P_DS_PDF}/${globals.P_OU_NAME}'
           '/${globals.APP_USER}/${globals.BROWSER_LANGUAGE}'
           '/${globals.P_ERP_OU_CODE}'));

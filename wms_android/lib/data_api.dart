@@ -10,7 +10,7 @@
 
 //   Future<void> fetchSessionid() async {
 //     final response = await http
-//         .get(Uri.parse('http://172.16.0.82:8888/apex/wms/c/sessionid'));
+//         .get(Uri.parse('${globals.IP_API}/apex/wms/c/sessionid'));
 
 //     if (response.statusCode == 200) {
 //       try {
@@ -32,7 +32,7 @@
 
 //   Future<void> updateSessionId(int app_session) async {
 //     final response = await http.get(Uri.parse(
-//         'http://172.16.0.82:8888/apex/wms/c/sessionid_update/$browser_language/$app_user/$app_session'));
+//         '${globals.IP_API}/apex/wms/c/sessionid_update/$browser_language/$app_user/$app_session'));
 
 //     if (response.statusCode == 200) {
 //       try {

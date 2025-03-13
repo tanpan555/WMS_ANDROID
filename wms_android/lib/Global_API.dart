@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const IP_API = '172.16.0.82:8888';
+const IP_API = '172.16.0.125:8080';
 
 Future<List> apiget1(String apiName, Map<String, dynamic>? data) async {
   final headers = {'Content-Type': 'application/json; charset=UTF-8'};

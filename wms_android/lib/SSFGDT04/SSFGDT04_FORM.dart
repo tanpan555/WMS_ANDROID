@@ -315,7 +315,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> save_INHeadNonePO_WMS(String? po_doc_no) async {
     final url =
-        '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_validateSave_INHeadNonePO_WMS/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${gb.APP_USER}';
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_validateSave_INHeadNonePO_WMS';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -323,15 +323,13 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     print(po_doc_no);
     print(gb.P_OU_CODE);
     print(gb.P_ERP_OU_CODE);
-    print(gb.APP_SESSION);
     print(gb.APP_USER);
 
     final body = jsonEncode({
       'V_DOC_NO': po_doc_no,
-      'P_WARE_CODE': gb.P_WARE_CODE,
+      'APP_USER': gb.APP_USER,
       'P_OU_CODE': gb.P_OU_CODE,
       'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
-      'APP_SESSION': gb.APP_SESSION,
     });
 
     print('headers : $headers Type : ${headers.runtimeType}');
@@ -713,7 +711,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                     await update(
                                         widget.po_doc_type, widget.po_doc_no);
                                     await save_INHeadNonePO_WMS(
-                                        selectedValue ?? '');
+                                        selectedValue ?? widget.po_doc_no);
                                     checkUpdateData = false;
 
                                     if (poStatus == '0') {
@@ -1106,12 +1104,14 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       subtitleText: (item) =>
                                           '${item['emp_name'] ?? ''}',
                                       onTap: (item) {
-                                        final empId = '${item['emp_id'] ?? ''}';
+                                        // final empId = '${item['emp_id'] ?? ''}';
+                                        final empName = '${item['emp_name'] ?? ''}';
                                         Navigator.of(context).pop();
                                         setState(() {
                                           String staffCode =
                                               _staffCodeController.text;
-                                          selectedSaffCode = empId;
+                                          // selectedSaffCode = empId;
+                                          selectedSaffCode = empName;
                                           _staffCodeController.text =
                                               selectedSaffCode ?? '';
                                           fetchSaffCodeItems();

@@ -178,10 +178,12 @@ class _BottomBarState extends State<BottomBar> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
+            // icon: Icon(Icons.home_outlined),
             label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
+            // icon: Icon(Icons.person_outline),
             label: '',
           ),
         ],

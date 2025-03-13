@@ -84,7 +84,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   Future<void> fetchApCodes() async {
     try {
       final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/c/AP_CODE'));
+          .get(Uri.parse('${globals.IP_API}/apex/wms/c/AP_CODE'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -110,7 +110,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   Future<void> fetchwhCodes() async {
     try {
       final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/WH/WHCode'));
+          .get(Uri.parse('${globals.IP_API}/apex/wms/WH/WHCode'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -305,7 +305,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   Future<void> fetchWareCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue'));
+          '${globals.IP_API}/apex/wms/c/new_card_list/$fixedValue'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
@@ -346,7 +346,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   Future<void> fetchPoStatus(String poNo, String? receiveNo) async {
     final String receiveNoParam = receiveNo ?? 'null';
     final String apiUrl =
-        'http://172.16.0.82:8888/apex/wms/c/check_rcv/$poNo/$receiveNoParam';
+        '${globals.IP_API}/apex/wms/c/check_rcv/$poNo/$receiveNoParam';
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -379,7 +379,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
 
   Future<void> sendPostRequest(
       String poNo, String receiveNo, String selectedwhCode) async {
-    final url = 'http://172.16.0.82:8888/apex/wms/c/create_inhead_wms';
+    final url = '${globals.IP_API}/apex/wms/c/create_inhead_wms';
 
     final headers = {
       'Content-Type': 'application/json',

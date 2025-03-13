@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'custom_appbar.dart';
 import 'package:http/http.dart' as http;
@@ -7,10 +9,20 @@ import 'login.dart';
 import 'bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'loading.dart';
-// import 'centered_message.dart';
 
 void main() {
+   WidgetsFlutterBinding.ensureInitialized();
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
+}
+
+class MyHttpOverrides extends HttpOverrides{
+   @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false, //remove the debug banner
       initialRoute: '/login',
-      theme: ThemeData().copyWith(
+      theme: ThemeData(fontFamily: 'K2D').copyWith(
         scaffoldBackgroundColor: const Color(0xFF17153B),
       ),
       routes: {

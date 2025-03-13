@@ -250,7 +250,7 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
   Future<void> getPDF(String poErpDocNo, String poTypeComplete) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_6_GET_PDF/'
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_6_GET_PDF/'
           '${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/'
           '${globals.APP_SESSION}/${widget.docType}/${globals.BROWSER_LANGUAGE}/${globals.P_DS_PDF}'));
 
