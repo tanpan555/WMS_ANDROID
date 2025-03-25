@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
@@ -950,8 +951,10 @@ class _LotDialogState extends State<LotDialog> {
               'ouCode': widget.ouCode,
             });
             Navigator.of(context).pop();
+            context.loaderOverlay.show();
             await updateOkLot(poReceiveNo, recSeq);
             await sendGetRequestlineWMS();
+            context.loaderOverlay.hide();
           },
         );
       },
@@ -1005,7 +1008,10 @@ class _LotDialogState extends State<LotDialog> {
                   ElevatedButton(
                     child: Text('SAVE'),
                     onPressed: () async {
+                      // print('SAVE');
+                      context.loaderOverlay.show();
                       await fetchPoStatus(widget.recSeq);
+                      context.loaderOverlay.hide();
                       if (poreject == '1') {
                         showCustomDialog(context, widget.poReceiveNo,
                             widget.recSeq, widget.ouCode);

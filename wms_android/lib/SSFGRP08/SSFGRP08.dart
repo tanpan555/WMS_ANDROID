@@ -962,7 +962,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     String? LT_SIGN2,
     String? LT_SIGN3,
   ) async {
-    final uri = Uri.parse('${globals.IP_API}/jri/report?'
+    final uri = Uri.parse('${globals.IP_API}/${globals.P_JASPER}/report?'
         '&_repName=WMS/WMS_SSFGRP08_2'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
@@ -1129,7 +1129,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
       String? LT_DATE,
       String? LT_PAGE,
       String? LT_PAGE1) async {
-    final uri = Uri.parse('${globals.IP_API}/jri/report?'
+    final uri = Uri.parse('${globals.IP_API}/${globals.P_JASPER}/report?'
         '&_repName=WMS/WMS_SSFGRP08_1'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:loader_overlay/loader_overlay.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
@@ -166,7 +167,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       'APP_USER': gb.APP_USER,
     });
     print('Request body: $body');
-
+    print('Request URL: ${Uri.parse(url)}');
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -199,6 +200,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
     try {
       final response = await http.get(Uri.parse(url), headers: headers);
+      print(Uri.parse(url));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -493,7 +495,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           builder: (BuildContext context) {
                             return DialogStyles.alertMessageDialog(
                               context: context,
-                              content: Text('โปรดใส่เลขที่มากกว่า 0'),
+                              content: const Text('โปรดใส่เลขที่มากกว่า 0'),
                               onClose: () {
                                 Navigator.of(context).pop(); // ปิด dialog
                               },
@@ -576,8 +578,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   Future<void> _launchUrl() async {
     print(widget.poReceiveNo);
     // final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    final Uri url = Uri.parse('${gb.IP_API}/jri/r' +
-        'eport?&_repName=/WMS/WMS_SSINDT01&_repFormat=pdf&_dataSource=wms&_outFilename=${widget.poReceiveNo}.pdf&_repLocale=en_US&P_RECEIVE_NO=${widget.poReceiveNo}&P_OU_CODE=${gb.P_ERP_OU_CODE}&P_ITEM=');
+    final Uri url = Uri.parse('${gb.IP_API}/${gb.P_JASPER}/report?&_repName=${gb.P_PATH}/WMS_SSINDT01&_repFormat=pdf&_dataSource=${gb.P_DS_PDF}&_outFilename=${widget.poReceiveNo}.pdf&_repLocale=en_US&P_RECEIVE_NO=${widget.poReceiveNo}&P_OU_CODE=${gb.P_ERP_OU_CODE}&P_ITEM=');
     print(url);
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
@@ -593,7 +594,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
-          title: Row(
+          title: const Row(
             children: <Widget>[
               Icon(Icons.info_outline, color: Colors.blue, size: 24.0),
               SizedBox(width: 10.0),
@@ -602,14 +603,14 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           ),
           content: Text(
             poMessage.toString(),
-            style: TextStyle(fontSize: 16.0),
+            style: const TextStyle(fontSize: 16.0),
           ),
           actions: <Widget>[
             TextButton(
               style: TextButton.styleFrom(
                 iconColor: Colors.red,
               ),
-              child: Column(
+              child: const Column(
                 children: <Widget>[
                   Icon(Icons.cancel, color: Colors.red),
                   SizedBox(width: 5.0),
@@ -624,7 +625,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               style: TextButton.styleFrom(
                 iconColor: Colors.blue,
               ),
-              child: Column(
+              child: const Column(
                 children: <Widget>[
                   Icon(Icons.check, color: Colors.blue),
                   SizedBox(width: 5.0),
@@ -750,18 +751,18 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: Container(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
                     'Details for ${item['lot_product_no']}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   _buildTextField(
                     controller: lotQtyController,
                     labelText: 'LOT Qty',
@@ -785,7 +786,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                       item['lot_supplier'] = value;
                     },
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -863,7 +864,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
         ),
         onChanged: onChanged,
       ),
@@ -886,7 +887,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
         ),
         onTap: () async {
           FocusScope.of(context).requestFocus(FocusNode());
@@ -946,12 +947,12 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: const Color.fromARGB(255, 0, 0, 0),
+            style: const TextStyle(
+              color: Color.fromARGB(255, 0, 0, 0),
               fontSize: 12,
             ),
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Flexible(
             // Flexible allows the value to take only the necessary space
             child: CustomContainerStyles.styledContainer(
@@ -960,9 +961,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                   5.0, // Adjust padding for better spacing inside the container
               child: Text(
                 value,
-                style: TextStyle(
+                style: const TextStyle(
                   overflow: TextOverflow.ellipsis,
-                  color: const Color.fromARGB(255, 0, 0, 0),
+                  color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 12,
                 ), // Ellipsis for long text
                 softWrap: true,
@@ -995,8 +996,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                         alignment: Alignment.center,
                         child: Text(
                           entry.key,
-                          style: TextStyle(
-                            color: const Color.fromARGB(255, 0, 0, 0),
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
                             fontSize: 12,
                           ),
                           softWrap: false,
@@ -1005,24 +1006,24 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Flexible(
                     child: Container(
                       height: 30,
                       alignment: Alignment.center,
                       child: TextField(
                         controller: TextEditingController(text: entry.value),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           filled: true,
-                          fillColor: const Color.fromARGB(255, 255, 255, 255),
+                          fillColor: Color.fromARGB(255, 255, 255, 255),
                           border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
+                          contentPadding: EdgeInsets.symmetric(
                             vertical: 18,
                             horizontal: 0,
                           ),
                         ),
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 0, 0, 0),
                           fontSize: 12,
                         ),
                         textAlign: TextAlign.right,
@@ -1057,35 +1058,35 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       entry.key,
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0),
                         fontSize: 12,
                       ),
                       softWrap: false,
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  SizedBox(width: 18),
+                  const SizedBox(width: 18),
 
                   Container(
-                    constraints: BoxConstraints(
+                    constraints: const BoxConstraints(
                       minWidth: 80,
                       maxWidth: 150,
                     ),
                     height: 30,
                     child: TextField(
                       controller: TextEditingController(text: entry.value),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         filled: true,
-                        fillColor: const Color.fromARGB(255, 255, 255, 255),
+                        fillColor: Color.fromARGB(255, 255, 255, 255),
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
+                        contentPadding: EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 10.0,
                         ),
                       ),
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0),
                         fontSize: 12,
                       ),
                       textAlign: TextAlign.left,
@@ -1113,12 +1114,12 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         elevation: 2,
       ),
       child: Text(
         label,
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -1157,7 +1158,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   void _showDeleteDialog() {
     if (dataList.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No items to delete')),
+        const SnackBar(content: Text('No items to delete')),
       );
       return;
     }
@@ -1171,7 +1172,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'เลือก Item ที่จะลบ',
                     style: TextStyle(
                       fontSize: 18.0,
@@ -1179,7 +1180,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close),
+                    icon: const Icon(Icons.close),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -1195,12 +1196,12 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                     return Card(
                       color: Colors.blue[50],
                       elevation: 2,
-                      margin: EdgeInsets.symmetric(vertical: 6),
+                      margin: const EdgeInsets.symmetric(vertical: 6),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -1216,7 +1217,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                         });
                                       },
                                     ),
-                                    Text(
+                                    const Text(
                                       'Item: ',
                                       style: TextStyle(fontSize: 12),
                                     ),
@@ -1226,7 +1227,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                         dataList[index]['item'],
                                         child: Text(
                                           '${dataList[index]['item'] ?? ''}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 12,
                                               color: Colors.black),
                                         ),
@@ -1234,12 +1235,12 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
 
                                 // Row for Item Desc
                                 Row(
                                   children: [
-                                    Text('Item Desc: ',
+                                    const Text('Item Desc: ',
                                         style: TextStyle(
                                             fontSize: 12, color: Colors.black)),
                                     Expanded(
@@ -1248,7 +1249,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                         dataList[index]['item_desc'],
                                         child: Text(
                                           '${dataList[index]['item_desc'] ?? ''}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 12,
                                               color: Colors.black),
                                         ),
@@ -1256,12 +1257,12 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
 
                                 // Row for Pending Qty
                                 Row(
                                   children: [
-                                    Text('ค้างรับ: ',
+                                    const Text('ค้างรับ: ',
                                         style: TextStyle(
                                             fontSize: 12, color: Colors.black)),
                                     CustomContainerStyles.styledContainer(
@@ -1269,13 +1270,13 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                           ?.toString(),
                                       child: Text(
                                         '${dataList[index]['pending_qty'] ?? 0}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 12, color: Colors.black),
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
                               ],
                             ),
                           ),
@@ -1290,13 +1291,13 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                   alignment: MainAxisAlignment.end,
                   children: <Widget>[
                     TextButton(
-                      child: Text('ยกเลิก'),
+                      child: const Text('ยกเลิก'),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
                     TextButton(
-                      child: Text('ยืนยันลบ'),
+                      child: const Text('ยืนยันลบ'),
                       onPressed: () {
                         // Check if at least one item is selected
                         int selectedCount =
@@ -1308,7 +1309,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             builder: (BuildContext context) {
                               return DialogStyles.alertMessageDialog(
                                 context: context,
-                                content: Text('เลือกอย่างน้อย 1 รายการเพื่อลบ'),
+                                content: const Text('เลือกอย่างน้อย 1 รายการเพื่อลบ'),
                                 onClose: () {
                                   Navigator.of(context).pop();
                                 },
@@ -1411,7 +1412,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                     builder: (BuildContext context) {
                                       return DialogStyles.messageDialog(
                                         context: context,
-                                        content: Text('complete'),
+                                        content: const Text('complete'),
                                         onClose: () {
                                           Navigator.of(context)
                                               .pop(); // ปิด dialog
@@ -1437,7 +1438,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             builder: (BuildContext context) {
                               return DialogStyles.messageDialog(
                                 context: context,
-                                content: Text('complete'),
+                                content: const Text('complete'),
                                 onClose: () {
                                   Navigator.of(context).pop(); // ปิด dialog
                                 },
@@ -1495,7 +1496,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                   ElevatedButton(
                     style: AppStyles.NextButtonStyle(),
                     onPressed: () async {
+                      context.loaderOverlay.show();
                       await chk_grid();
+                      context.loaderOverlay.hide();
                       if (poStatusGrid == '0') {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -1547,7 +1550,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                     child: Center(
                       child: Text(
                         '${widget.poPONO}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Color.fromARGB(255, 0, 0, 0),
@@ -1562,7 +1565,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                     child: Center(
                       child: Text(
                         '${widget.poReceiveNo}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Color.fromARGB(255, 0, 0, 0),
@@ -1576,12 +1579,12 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             return InkWell(
                               child: Card(
                                 elevation: 8,
-                                margin: EdgeInsets.symmetric(
+                                margin: const EdgeInsets.symmetric(
                                     vertical: 8, horizontal: 1),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                color: Color.fromRGBO(204, 235, 252, 1.0),
+                                color: const Color.fromRGBO(204, 235, 252, 1.0),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
@@ -1594,17 +1597,17 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                       Center(
                                         child: Text(
                                           '${data['item']?.toString() ?? ''}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18,
-                                            color: const Color.fromARGB(
+                                            color: Color.fromARGB(
                                                 255, 0, 0, 0),
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 12),
-                                      Divider(
-                                          color: const Color.fromARGB(
+                                      const SizedBox(height: 12),
+                                      const Divider(
+                                          color: Color.fromARGB(
                                               255, 0, 0, 0)),
                                       _buildInfoRow2({
                                         'จำนวนรับ :':
@@ -1681,9 +1684,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                             builder: (context, snapshot) {
                                               if (snapshot.connectionState ==
                                                   ConnectionState.waiting) {
-                                                return CircularProgressIndicator();
+                                                return const CircularProgressIndicator();
                                               } else if (snapshot.hasError) {
-                                                return Text('Error');
+                                                return const Text('Error');
                                               } else if (snapshot.data == '1') {
                                                 return ElevatedButton(
                                                   onPressed: () async {
@@ -1735,7 +1738,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                                     );
                                                     if (result == null) {
                                                       Timer(
-                                                          Duration(seconds: 1),
+                                                          const Duration(seconds: 1),
                                                           () {
                                                         sendGetRequestlineWMS();
                                                       });
@@ -1752,11 +1755,10 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                                           BorderRadius.circular(
                                                               15),
                                                     ),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 20),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(horizontal: 20),
                                                   ),
-                                                  child: Text(
+                                                  child: const Text(
                                                     'LOT',
                                                     style: TextStyle(
                                                         fontSize: 16,
@@ -1764,28 +1766,26 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                                   ),
                                                 );
                                               } else {
-                                                return InkWell(
-                                                  onTap: () {
-                                                    _showDetailsDialog(
-                                                        context, data);
-                                                  },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .all(
-                                                        15.0), // เพิ่มพื้นที่รอบๆปุ่ม
-                                                    child: Container(
-                                                      width: 30,
-                                                      height: 30,
-                                                      child: Image.asset(
-                                                        'assets/images/edit.png',
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
+                                                return const SizedBox();
                                               }
                                             },
                                           ),
+                                          InkWell(
+                                            onTap: () {
+                                              _showDetailsDialog(context, data);
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(15.0), // เพิ่มพื้นที่รอบๆปุ่ม
+                                              child: Container(
+                                                width: 30,
+                                                height: 30,
+                                                child: Image.asset(
+                                                  'assets/images/edit.png',
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              ),
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ],
@@ -1856,7 +1856,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'show'),
+      bottomNavigationBar: const BottomBar(currentPage: 'show'),
     );
   }
 }

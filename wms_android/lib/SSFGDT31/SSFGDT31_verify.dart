@@ -324,8 +324,8 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
   }
 
   Future<void> _launchUrl(String pDocNo) async {
-    final uri = Uri.parse('${globals.IP_API}/jri/report?'
-        '&_repName=/WMS/SSFGDT31_REPORT'
+    final uri = Uri.parse('${globals.IP_API}/${globals.P_JASPER}/report?'
+        '&_repName=${globals.P_PATH}/SSFGDT31_REPORT'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
         '&_outFilename=${widget.docType}-${widget.docNo}.pdf'

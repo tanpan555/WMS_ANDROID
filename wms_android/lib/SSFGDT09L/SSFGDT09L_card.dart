@@ -564,8 +564,8 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   }
 
   Future<void> _launchUrl(String pErpDocNo, String pDocType) async {
-    final uri = Uri.parse('${globals.IP_API}/jri/report?'
-        '&_repName=/WMS/SSFGOD02A5'
+    final uri = Uri.parse('${globals.IP_API}/${globals.P_JASPER}/report?'
+        '&_repName=${globals.P_PATH}/SSFGOD02A5'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
         '&_outFilename=$pErpDocNo.pdf'

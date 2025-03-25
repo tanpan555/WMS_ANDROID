@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_main.dart';
@@ -612,9 +613,10 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       );
       return;
     }
+    context.loaderOverlay.show();
     await updateForm_REMARK(
         receiveNo, poRemark, receiveDate, invoiceDate, invoiceNo, poTypeCode);
-
+    context.loaderOverlay.hide();
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => Ssindt01Grid(

@@ -374,8 +374,8 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   }
 
   Future<void> _launchUrl(String pDocNo) async {
-    final uri = Uri.parse('${globals.IP_API}/jri/report?'
-        '&_repName=/WMS/SSFGOD02A5'
+    final uri = Uri.parse('${globals.IP_API}/${globals.P_JASPER}/report?'
+        '&_repName=${globals.P_PATH}/SSFGOD02A5'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
         '&_outFilename=$pDocNo.pdf'
@@ -425,8 +425,8 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
-    print('${globals.IP_API}/jri/report?'
-        '&_repName=/WMS/SSFGOD02A5'
+    print('${globals.IP_API}/${globals.P_JASPER}/report?'
+        '&_repName=${globals.P_PATH}/SSFGOD02A5'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
         '&_outFilename=$pDocNo.pdf'

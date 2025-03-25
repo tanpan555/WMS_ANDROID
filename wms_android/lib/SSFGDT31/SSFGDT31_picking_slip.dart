@@ -183,8 +183,8 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
   }
 
   Future<void> _launchUrl() async {
-    final uri = Uri.parse('${globals.IP_API}/jri/report?'
-        '&_repName=/WMS/WMS_SSFGDT09L_Picking_Slip'
+    final uri = Uri.parse('${globals.IP_API}/${globals.P_JASPER}/report?'
+        '&_repName=${globals.P_PATH}/WMS_SSFGDT09L_Picking_Slip'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
         '&_outFilename=${widget.pDocNo}.pdf'
@@ -207,8 +207,8 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
-    print('${globals.IP_API}/jri/report?'
-        '&_repName=/WMS/SSFGOD02A5'
+    print('${globals.IP_API}/${globals.P_JASPER}/report?'
+        '&_repName=${globals.P_PATH}/SSFGOD02A5'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
         '&_outFilename=${widget.pDocNo}.pdf'

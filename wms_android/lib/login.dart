@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:wms_android/Global_API.dart';
+import 'package:wms_android/Global_ConfirmDialog.dart';
 import 'dart:ui';
 // import 'data_api.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:dio/dio.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -54,6 +59,7 @@ class UpperCaseNoSpaceTextFormatter extends TextInputFormatter {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String appVersion = 'Unknown';
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _loginError = '';
@@ -79,15 +85,15 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     try {
-      print(Uri.parse('${globals.IP_API}/apex/wms/login_wms/process'));
-      print({
-          'P_USERNAME': username,
-          'P_PASSWORD': password,
-          'P_OU': 'LIK',
-          'P_DIV': 'HQ',
-          'APP_ALIAS': 'WMS',
-          'P_HTTP_HOST': '172.16.0.125:8080',
-        });
+      // print(Uri.parse('${globals.IP_API}/apex/wms/login_wms/process'));
+      // print({
+      //     'P_USERNAME': username,
+      //     'P_PASSWORD': password,
+      //     'P_OU': 'LIK',
+      //     'P_DIV': 'HQ',
+      //     'APP_ALIAS': 'WMS',
+      //     'P_HTTP_HOST': '172.16.0.125:8080',
+      //   });
       final response = await http.post(
         Uri.parse('${globals.IP_API}/apex/wms/login_wms/process'),
         body: {
@@ -143,16 +149,121 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.pushNamed(context, '/forgotPassword');
   }
 
+Future<void> checkForUpdate(BuildContext context) async {
+ 
+    try {
+      final response = await apiget2('mb_ver/APK_PROCESS',{
+        'p_version' : appVersion
+      });
+      print('response : $response');
+      String downloadUrl = response[0]['po_message'];
+      if (response[0]['po_status'] == 1) {
+        print("Version mismatch detected, showing dialog...");
+        final bool? confirm = await showConfirmationDialog(
+        context: context,
+        title: 'อัปเดตแอปใหม่!',
+        content: 'มีเวอร์ชันใหม่กรุณาอัปเดต');
+    if (confirm == true) {
+      await downloadAndOpenFile(downloadUrl, context);
+    }
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("อัปเดตแอปใหม่!"),
+            content: const Text("มีเวอร์ชันใหม่  กรุณาอัปเดต"
+                ),
+            actions: [
+              TextButton(
+                onPressed: () async {},
+                child: const Text("อัปเดต"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("ภายหลัง"),
+              ),
+            ],
+          ),
+        );
+      } else {
+        print("แอปของคุณเป็นเวอร์ชันล่าสุดแล้ว ($appVersion)");
+      }
+    } catch (e) {
+      print("Check Update Error: $e");
+    }
+  }
+
+  Future<void> downloadAndOpenFile(String url, BuildContext context) async {
+  Dio dio = Dio(); // สร้าง instance ของ Dio
+  ValueNotifier<double> progressNotifier = ValueNotifier(0.0);
+
+  try {
+    // แสดง loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          content: ValueListenableBuilder<double>(
+            valueListenable: progressNotifier,
+            builder: (context, progress, child) {
+              return Row(
+                children: [
+                  CircularProgressIndicator(value: progress > 0 ? progress : null),
+                  const SizedBox(width: 20),
+                  Text("กำลังดาวน์โหลด ${(progress * 100).toStringAsFixed(0)}%"),
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+
+    final directory = await getTemporaryDirectory();
+    final filePath = '${directory.path}/app_update.apk';
+
+    await dio.download(
+      url,
+      filePath,
+      onReceiveProgress: (received, total) {
+        if (total != -1) {
+          progressNotifier.value = received / total;
+        }
+      },
+    );
+
+    // ปิด loading dialog
+    Navigator.pop(context);
+
+    // เปิดไฟล์ที่ดาวน์โหลด
+    final result = await OpenFilex.open(filePath);
+    if (result.type != ResultType.done) {
+      print("Error opening file: ${result.message}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("ไม่สามารถเปิดไฟล์ได้: ${result.message}")),
+      );
+    }
+  } catch (e) {
+    print("Download Error: $e");
+    Navigator.pop(context); // ปิด loading dialog
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("เกิดข้อผิดพลาดในการดาวน์โหลด: $e")),
+    );
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+              checkForUpdate(context);
+            });
     return Scaffold(
       body: Container(
         height: screenHeight,
         width: screenWidth,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Color.fromARGB(255, 17, 0, 56),
         ),
         child: Center(
@@ -181,7 +292,7 @@ class _LoginPageState extends State<LoginPage> {
                                 height: screenHeight * 0.2,
                               ),
                               const SizedBox(height: 10),
-                              Text(
+                              const Text(
                                 'Warehouse Management',
                                 style: TextStyle(
                                   fontSize: 18,
@@ -195,27 +306,27 @@ class _LoginPageState extends State<LoginPage> {
                                 inputFormatters: [
                                   UpperCaseNoSpaceTextFormatter()
                                 ], // Updated here
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
-                                  prefixIcon: Padding(
-                                    padding: const EdgeInsets.all(13),
+                                  prefixIcon: const Padding(
+                                    padding: EdgeInsets.all(13),
                                     child: Icon(Icons.person,
                                         color: Colors.white, size: 20),
                                   ),
                                   hintText: 'Username',
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                       fontSize: 14, color: Colors.white),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(color: Colors.white),
+                                    borderSide: const BorderSide(color: Colors.white),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(color: Colors.white),
+                                    borderSide: const BorderSide(color: Colors.white),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(color: Colors.white),
+                                    borderSide: const BorderSide(color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -223,27 +334,27 @@ class _LoginPageState extends State<LoginPage> {
                               TextFormField(
                                 controller: _passwordController,
                                 obscureText: true,
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
-                                  prefixIcon: Padding(
-                                    padding: const EdgeInsets.all(16),
+                                  prefixIcon: const Padding(
+                                    padding: EdgeInsets.all(16),
                                     child: FaIcon(FontAwesomeIcons.key,
                                         color: Colors.white, size: 15),
                                   ),
                                   hintText: 'Password',
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                       fontSize: 14, color: Colors.white),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(color: Colors.white),
+                                    borderSide: const BorderSide(color: Colors.white),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(color: Colors.white),
+                                    borderSide: const BorderSide(color: Colors.white),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(color: Colors.white),
+                                    borderSide: const BorderSide(color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -252,13 +363,13 @@ class _LoginPageState extends State<LoginPage> {
                                   padding: const EdgeInsets.only(top: 8.0),
                                   child: Text(
                                     _loginError,
-                                    style: TextStyle(color: Colors.red),
+                                    style: const TextStyle(color: Colors.red),
                                   ),
                                 ),
                               if (_isLoading)
                                 Container(
                                   // color: Color.fromARGB(255, 17, 0, 56),
-                                  child: Center(
+                                  child: const Center(
                                     child: CircularProgressIndicator(
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                           Colors.white),

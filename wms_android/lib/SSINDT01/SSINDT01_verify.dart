@@ -51,8 +51,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
     super.initState();
     sendGetRequestlineWMS();
 
-    reportServer = '${gb.IP_API}/jri/report?&_repName=/$reportname'
-        '&_repFormat=pdf&_dataSource=wms'
+    reportServer = '${gb.IP_API}/${gb.P_JASPER}/report?&_repName=/$reportname'
+        '&_repFormat=pdf&_dataSource=${gb.P_DS_PDF}'
         '&_outFilename=$erp_doc_no.pdf'
         '&_repLocale=en_US';
 
@@ -68,11 +68,11 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
 
   Future<void> _launchUrl() async {
     print(widget.poReceiveNo);
-    final uri = Uri.parse('${gb.IP_API}/jri/report?'
-        '&_repName=/WMS/$reportname'
+    final uri = Uri.parse('${gb.IP_API}/${gb.P_JASPER}/report?'
+        '&_repName=${gb.P_PATH}/$reportname'
         '&_repFormat=pdf'
-        '&_dataSource=wms'
-        '&_outFilename=${widget.poReceiveNo}'
+        '&_dataSource=${gb.P_DS_PDF}'
+        '&_outFilename=${widget.poReceiveNo}.pdf'
         '&_repLocale=en_US'
         '&LH_AP_CODE=$LH_AP_CODE'
         '&LH_AP_NAME=$LH_AP_NAME'
@@ -146,8 +146,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
 
         revNo = data['P_RECEIVE_NO'];
 
-        reportServer = '${gb.IP_API}/jri/report?&_repName=/$reportname'
-            '&_repFormat=pdf&_dataSource=wms'
+        reportServer = '${gb.IP_API}/${gb.P_JASPER}/report?&_repName=/$reportname'
+            '&_repFormat=pdf&_dataSource=${gb.P_DS_PDF}'
             '&_outFilename=${widget.poReceiveNo}.pdf'
             '&_repLocale=en_US';
 

@@ -1111,8 +1111,8 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> _launchUrl() async {
-    final uri = Uri.parse('${globals.IP_API}/jri/report?'
-        '&_repName=/WMS/WMS_SSFGRP09'
+    final uri = Uri.parse('${globals.IP_API}/${globals.P_JASPER}/report?'
+        '&_repName=${gb.P_PATH}/WMS_SSFGRP09'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
         '&_outFilename=SSFGRP09_$V_SYSDATE.pdf'
@@ -1201,8 +1201,8 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
-    print('${globals.IP_API}/jri/report?'
-        '&_repName=/WMS/WMS_SSFGRP09'
+    print('${globals.IP_API}/${globals.P_JASPER}/report?'
+        '&_repName=${gb.P_PATH}/WMS_SSFGRP09'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
         '&_outFilename=SSFGRP09_$V_SYSDATE.pdf'

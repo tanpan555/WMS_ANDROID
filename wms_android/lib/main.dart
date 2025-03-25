@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:flutter/material.dart';
 import 'custom_appbar.dart';
 import 'package:http/http.dart' as http;
@@ -30,28 +30,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false, //remove the debug banner
-      initialRoute: '/login',
-      theme: ThemeData(fontFamily: 'K2D').copyWith(
-        scaffoldBackgroundColor: const Color(0xFF17153B),
+    return GlobalLoaderOverlay(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false, //remove the debug banner
+        initialRoute: '/login',
+        theme: ThemeData(fontFamily: 'K2D').copyWith(
+          scaffoldBackgroundColor: const Color(0xFF17153B),
+        ),
+        routes: {
+          '/login': (context) => LoginPage(),
+          '/home': (context) => MyHomePage(),
+        },
+        builder: (context, child) {
+          final mediaQueryData = MediaQuery.of(context);
+          final scale = mediaQueryData.textScaler.clamp(
+            maxScaleFactor: 1.0, // Maximum scale factor allowed.
+          );
+          return MediaQuery(
+            data: mediaQueryData.copyWith(
+              textScaler: scale,
+            ),
+            child: child!,
+          );
+        },
       ),
-      routes: {
-        '/login': (context) => LoginPage(),
-        '/home': (context) => const MyHomePage(),
-      },
-      builder: (context, child) {
-        final mediaQueryData = MediaQuery.of(context);
-        final scale = mediaQueryData.textScaler.clamp(
-          maxScaleFactor: 1.0, // Maximum scale factor allowed.
-        );
-        return MediaQuery(
-          data: mediaQueryData.copyWith(
-            textScaler: scale,
-          ),
-          child: child!,
-        );
-      },
     );
   }
 }

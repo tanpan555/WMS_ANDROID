@@ -237,8 +237,8 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
   }
 
   Future<void> _launchUrl(String poDocNo) async {
-    final uri = Uri.parse('${gb.IP_API}/jri/report?'
-        '&_repName=/WMS/SSFGOD01'
+    final uri = Uri.parse('${gb.IP_API}/${gb.P_JASPER}/report?'
+        '&_repName=${gb.P_PATH}/SSFGOD01'
         '&_repFormat=pdf'
         '&_dataSource=${gb.P_DS_PDF}'
         '&_outFilename=$poDocNo.pdf'
@@ -283,8 +283,8 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
-    print('${gb.IP_API}/jri/report?'
-        '&_repName=/WMS/SSFGOD01'
+    print('${gb.IP_API}/${gb.P_JASPER}/report?'
+        '&_repName=${gb.P_PATH}/SSFGOD01'
         '&_repFormat=pdf'
         '&_dataSource=${gb.P_DS_PDF}'
         '&_outFilename=$poDocNo.pdf'
