@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/login': (context) => LoginPage(),
-          '/home': (context) => MyHomePage(),
+          '/home': (context) => const MyHomePage(),
         },
         builder: (context, child) {
           final mediaQueryData = MediaQuery.of(context);
@@ -141,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF17153B),
+      backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'Home', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -156,8 +156,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   : SingleChildScrollView(
                       child: GridView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 5,
                           mainAxisSpacing: 5,
@@ -264,7 +264,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
+      bottomNavigationBar: const BottomBar(currentPage: 'not_show'),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 Future<bool?> showConfirmationDialog({
   required BuildContext context,
   required String title,
@@ -20,7 +21,7 @@ Future<bool?> showConfirmationDialog({
             borderRadius: BorderRadius.circular(0),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(25.0),
+            padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,31 +29,32 @@ Future<bool?> showConfirmationDialog({
                 Text(
                   title,
                   style: const TextStyle(
-                      fontSize: 24,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Text(
                   content,
                   style: const TextStyle(fontSize: 20, color: Colors.black),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 191, 57, 57), // ใช้สีที่กำหนด
+                        backgroundColor: const Color.fromARGB(
+                            255, 191, 57, 57), // ใช้สีที่กำหนด
                         elevation: 0,
                       ),
                       onPressed: () => Navigator.of(context).pop(false),
                       child: Text(
                         cancelText,
                         style:
-                            const TextStyle(color: Colors.white, fontSize: 20),
+                            const TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                     ElevatedButton(
@@ -64,7 +66,7 @@ Future<bool?> showConfirmationDialog({
                       child: Text(
                         confirmText,
                         style:
-                            const TextStyle(color: Colors.white, fontSize: 20),
+                            const TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                   ],

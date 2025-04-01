@@ -1,7 +1,7 @@
 name: wms_android
 description: "A new Flutter project."
 publish_to: "none"
-version: 1.0.0+1
+version: 1.0.0
 environment:
   sdk: ">=3.4.4 <4.0.0"
 
@@ -21,6 +21,7 @@ dependencies:
   loader_overlay: ^5.0.0
   open_filex: ^4.7.0
   dio: ^5.8.0+1
+  package_info_plus: ^8.3.0
 
 dev_dependencies:
   flutter_test:
@@ -65,73 +66,6 @@ flutter:
         - asset: assets/font/K2D-ThinItalic.ttf
           weight: 100
           style: italic
-        # - asset: assets/font/NotoSerifThai_Condensed-Black.ttf
-        #   weight: 900
-        # - asset: assets/font/NotoSerifThai_Condensed-Bold.ttf
-        #   weight: 700
-        # - asset: assets/font/NotoSerifThai_Condensed-ExtraBold.ttf
-        #   weight: 800
-        # - asset: assets/font/NotoSerifThai_Condensed-ExtraLight.ttf
-        #   weight: 200
-        # - asset: assets/font/NotoSerifThai_Condensed-Light.ttf
-        # - asset: assets/font/NotoSerifThai_Condensed-Medium.ttf
-        #   weight: 500
-        # - asset: assets/font/NotoSerifThai_Condensed-Regular.ttf
-        # - asset: assets/font/NotoSerifThai_Condensed-SemiBold.ttf
-        #   weight: 600
-        # - asset: assets/font/NotoSerifThai_Condensed-Thin.ttf
-        #   weight: 100
-        # - asset: assets/font/NotoSerifThai_ExtraCondensed-Black.ttf
-        #   weight: 900
-        # - asset: assets/font/NotoSerifThai_ExtraCondensed-Bold.ttf
-        #   weight: 700
-        # - asset: assets/font/NotoSerifThai_ExtraCondensed-ExtraBold.ttf
-        #   weight: 800
-        # - asset: assets/font/NotoSerifThai_ExtraCondensed-ExtraLight.ttf
-        #   weight: 200
-        # - asset: assets/font/NotoSerifThai_ExtraCondensed-Light.ttf
-        #   weight: 300
-        # - asset: assets/font/NotoSerifThai_ExtraCondensed-Medium.ttf
-        #   weight: 500
-        # - asset: assets/font/NotoSerifThai_ExtraCondensed-Regular.ttf
-        # - asset: assets/font/NotoSerifThai_ExtraCondensed-SemiBold.ttf
-        #   weight: 600
-        # - asset: assets/font/NotoSerifThai_ExtraCondensed-Thin.ttf
-        #   weight: 100
-        # - asset: assets/font/NotoSerifThai_SemiCondensed-Black.ttf
-        #   weight: 900
-        # - asset: assets/font/NotoSerifThai_SemiCondensed-Bold.ttf
-        #   weight: 700
-        # - asset: assets/font/NotoSerifThai_SemiCondensed-ExtraBold.ttf
-        #   weight: 800
-        # - asset: assets/font/NotoSerifThai_SemiCondensed-ExtraLight.ttf
-        #   weight: 200
-        # - asset: assets/font/NotoSerifThai_SemiCondensed-Light.ttf
-        #   weight: 300
-        # - asset: assets/font/NotoSerifThai_SemiCondensed-Medium.ttf
-        #   weight: 500
-        # - asset: assets/font/NotoSerifThai_SemiCondensed-Regular.ttf
-        # - asset: assets/font/NotoSerifThai_SemiCondensed-SemiBold.ttf
-        #   weight: 600
-        # - asset: assets/font/NotoSerifThai_SemiCondensed-Thin.ttf
-        #   weight: 100
-        # - asset: assets/font/NotoSanrThai-Black.ttf
-        #   weight: 900
-        # - asset: assets/font/NotoSanrThai-Bold.ttf
-        #   weight: 700
-        # - asset: assets/font/NotoSanrThai-ExtraBold.ttf
-        #   weight: 800
-        # - asset: assets/font/NotoSanrThai-ExtraLight.ttf
-        #   weight: 200
-        # - asset: assets/font/NotoSanrThai-Light.ttf
-        #   weight: 300
-        # - asset: assets/font/NotoSanrThai-Medium.ttf
-        #   weight: 500
-        # - asset: assets/font/NotoSanrThai-Regular.ttf
-        # - asset: assets/font/NotoSerifThai-SemiBold.ttf
-        #   weight: 600
-        # - asset: assets/font/NotoSerifThai-Thin.ttf
-        #   weight: 100
 
 
 

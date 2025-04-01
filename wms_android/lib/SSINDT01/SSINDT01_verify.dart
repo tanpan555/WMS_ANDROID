@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:loader_overlay/loader_overlay.dart';
 import 'dart:convert';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
@@ -317,10 +318,11 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                       if (isDialogShowing) return;
 
                       setState(() {
-                        isDialogShowing =
-                            true; // Set flag to true when a dialog is about to be shown
+                        isDialogShowing = true; // Set flag to true when a dialog is about to be shown
                       });
+                      context.loaderOverlay.show();
                       await chk_sub();
+                      context.loaderOverlay.hide();
                       if (poStatus == '1') {
                         showDialog(
                           context: context,
@@ -360,7 +362,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     TextButton(
-                                      child: Text('ยืนยัน'),
+                                      child: const Text('ยืนยัน'),
                                       onPressed: () async {
                                         showCustomDialog(context);
                                       },
@@ -397,7 +399,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                     child: Center(
                       child: Text(
                         '${widget.poPONO}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Color.fromARGB(255, 0, 0, 0),
@@ -411,8 +413,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                     color: const Color.fromARGB(255, 244, 244, 244),
                     child: Center(
                       child: Text(
-                        '${widget.poReceiveNo}',
-                        style: TextStyle(
+                        widget.poReceiveNo,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Color.fromARGB(255, 0, 0, 0),
@@ -421,9 +423,9 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                     ),
                   ),
                   dataList.isEmpty
-                      ? Center(
+                      ? const Center(
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 150),
+                            padding: EdgeInsets.only(top: 150),
                             child: Text(
                               'No data found',
                               style: TextStyle(color: Colors.white),
@@ -431,7 +433,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                           ),
                         )
                       : SingleChildScrollView(
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: dataList.map((data) {
                               Map<String, String> info1 = {
@@ -447,14 +449,14 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                                     data['lot_product_no']?.toString() ?? '-',
                               };
                               return Card(
-                                margin: EdgeInsets.symmetric(vertical: 8.0),
+                                margin: const EdgeInsets.symmetric(vertical: 8.0),
                                 elevation: 6.0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.0),
                                 ),
-                                color: Color.fromRGBO(204, 235, 252, 1.0),
+                                color: const Color.fromRGBO(204, 235, 252, 1.0),
                                 child: Padding(
-                                  padding: EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.all(16.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -462,16 +464,16 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                                       Center(
                                         child: Text(
                                           ' ${data['item'] ?? ''}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
-                                            color: const Color.fromARGB(
+                                            color: Color.fromARGB(
                                                 255, 0, 0, 0),
                                           ),
                                         ),
                                       ),
-                                      Divider(
-                                          color: const Color.fromARGB(
+                                      const Divider(
+                                          color: Color.fromARGB(
                                               255, 0, 0, 0)),
                                       _buildInfoRow2(info1),
                                       _buildInfoRow2(info2),
@@ -488,7 +490,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'show'),
+      bottomNavigationBar: const BottomBar(currentPage: 'show'),
     );
   }
 
@@ -512,8 +514,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                         alignment: Alignment.center,
                         child: Text(
                           entry.key,
-                          style: TextStyle(
-                            color: const Color.fromARGB(255, 0, 0, 0),
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
                             fontSize: 12,
                           ),
                           softWrap: false,
@@ -522,7 +524,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 1),
+                  const SizedBox(width: 1),
                   Flexible(
                     flex: 1,
                     child: Container(
@@ -530,17 +532,17 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                       alignment: Alignment.center,
                       child: TextField(
                         controller: TextEditingController(text: entry.value),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           filled: true,
-                          fillColor: const Color.fromARGB(255, 254, 247, 230),
+                          fillColor: Color.fromARGB(255, 254, 247, 230),
                           border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
+                          contentPadding: EdgeInsets.symmetric(
                             vertical: 14,
                             horizontal: 0,
                           ),
                         ),
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 0, 0, 0),
                           fontSize: 12,
                         ),
                         textAlign: TextAlign.right,
@@ -562,11 +564,11 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('ต้องการพิมพ์เอกสารใบรับหรือไม่'),
+          title: const Text('ต้องการพิมพ์เอกสารใบรับหรือไม่'),
           content: Text('$erp_doc_no'),
           actions: [
             TextButton(
-              child: Text('ยกเลิก'),
+              child: const Text('ยกเลิก'),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -576,7 +578,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
               },
             ),
             TextButton(
-              child: Text('ยืนยัน'),
+              child: const Text('ยืนยัน'),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
