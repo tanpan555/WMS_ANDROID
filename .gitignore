@@ -15,3 +15,13 @@ wms_android/macos/Flutter/GeneratedPluginRegistrant.swift
 wms_android/windows/flutter/generated_plugin_registrant.cc
 wms_android/windows/flutter/generated_plugin_registrant.h
 wms_android/windows/flutter/generated_plugins.cmake
+ORDS_REST_WMS_ALL_2025_01_21.sql
+wms_android/.metadata
+wms_android/pubspec.lock
+wms_android/linux/flutter/generated_plugin_registrant.cc
+wms_android/linux/flutter/generated_plugin_registrant.h
+wms_android/linux/flutter/generated_plugins.cmake
+wms_android/macos/Flutter/GeneratedPluginRegistrant.swift
+wms_android/windows/flutter/generated_plugin_registrant.cc
+wms_android/windows/flutter/generated_plugin_registrant.h
+wms_android/windows/flutter/generated_plugins.cmake
